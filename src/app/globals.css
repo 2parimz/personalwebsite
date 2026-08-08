@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Palette — pulled off the moodboard: newsprint cream, ink black,
+   lipstick red, and the olive from the "Fashion Trends" spread.
+   Everything routes through semantic vars so the noir easter egg can
+   invert the whole issue by flipping one attribute on <html>.
+------------------------------------------------------------------- */
+:root {
+  --bg: #f2ede3;
+  --paper: #faf7f0;
+  --fg: #14110f;
+  --accent: #cf3b2c;
+  --olive: #6f7042;
+  --rule: rgb(20 17 15 / 0.16);
+  --grain-opacity: 0.055;
+}
+
+[data-theme="noir"] {
+  --bg: #14110f;
+  --paper: #1e1a17;
+  --fg: #f2ede3;
+  --accent: #e8604f;
+  --olive: #9aa05e;
+  --rule: rgb(242 237 227 / 0.2);
+  --grain-opacity: 0.09;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-paper: var(--paper);
+  --color-fg: var(--fg);
+  --color-accent: var(--accent);
+  --color-olive: var(--olive);
+  --color-rule: var(--rule);
+
+  --font-display: var(--font-display-src), "Didot", "Bodoni MT", Georgia, serif;
+  --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  /* Lenis drives the scroll; this is the no-JS / reduced-motion fallback. */
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background-color 600ms ease, color 600ms ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Lenis needs the page to stop managing its own scroll while active. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ---------------- Editorial primitives ---------------- */
+
+/* Small caps label — the "MARZO / 2025" ticks in the moodboard. */
+.kicker {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Oversized Didone headline, set tight like a masthead. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 0.84;
+  letter-spacing: -0.02em;
+}
+
+/* Justified magazine body copy with a drop-cap first letter. */
+.column {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  text-align: justify;
+  hyphens: auto;
+}
+.column--dropcap::first-letter {
+  font-family: var(--font-display);
+  float: left;
+  font-size: 3.6em;
+  line-height: 0.76;
+  padding-right: 0.08em;
+  padding-top: 0.06em;
+  font-weight: 500;
+}
+
+.rule {
+  border-top: 1px solid var(--rule);
+}
+
+/* Paper grain, layered over photos and panels. */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+[data-theme="noir"] .grain::after {
+  mix-blend-mode: screen;
+}
+
+/* Link underline that draws in from the left. */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.12em;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.marquee-track {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
