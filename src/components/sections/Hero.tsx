@@ -59,10 +59,16 @@ export function Hero() {
           </div>
 
           <h1 className="display mt-6 text-[clamp(3.6rem,13vw,10rem)]">
+            {/* The mask needs headroom below the baseline or descenders (the
+                g in "girl") get cropped by overflow-hidden. The negative
+                margin hands the padding back so the leading stays tight. */}
             {words.map((word, i) => (
-              <span key={word + i} className="block overflow-hidden">
+              <span
+                key={word + i}
+                className="block overflow-hidden pb-[0.16em] [margin-bottom:-0.16em]"
+              >
                 <motion.span
-                  initial={{ y: "110%" }}
+                  initial={{ y: "150%" }}
                   animate={{ y: "0%" }}
                   transition={{ duration: 1.05, delay: 0.12 * i, ease: EASE }}
                   className={`block ${i === 1 ? "pl-[0.35em] italic" : ""} ${

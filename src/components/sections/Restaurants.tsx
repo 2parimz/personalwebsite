@@ -11,7 +11,7 @@ export function Restaurants() {
   return (
     <section
       id="restaurants"
-      className="relative mx-auto max-w-[1400px] scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32"
+      className="relative mx-auto max-w-[1400px] scroll-mt-20 px-5 pb-24 pt-16 sm:px-8 sm:pb-32 sm:pt-20"
     >
       {/* Banana #3 */}
       <BananaSpot className="bottom-[8%] left-[3%]" size={26} rotate={38} />
