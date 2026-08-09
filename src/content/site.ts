@@ -237,7 +237,7 @@ export const intro = {
   character: {
     hair: "#241d19",
     skin: "#d8a982",
-    top: "#1c1a17",
+    top: "#6e2733",
   },
 };
 

@@ -5,29 +5,35 @@ import { motion } from "framer-motion";
 import { intro } from "@/content/site";
 
 /**
- * The intro illustration.
+ * The intro illustration — laid out after the reference: two windows onto a
+ * night skyline, string lights swagged across the wall, a side table with
+ * stacked books and a lamp, a dresser with the record player, mirror, plant,
+ * rug, boots. Rendered in the muted jewel palette rather than pastel.
  *
- * The thing that stops vector art reading as "clean and sloppy" is the
- * `rough` filter: fractal-noise displacement applied to whole groups, which
- * gives every edge a drawn wobble. Structure gets the strong version, the
- * figure a softer one, and the swaying shins none at all — a filter over an
+ * Vector reads as sloppy when every edge is exact, so whole groups run
+ * through fractal-noise displacement to give the linework a drawn wobble.
+ * The swaying shins are deliberately left unfiltered: a filter over an
  * element that animates every frame is recomputed every frame, and at that
- * stroke weight the difference is invisible.
+ * stroke weight the difference does not show.
  *
  * Animated layers: shins (continuous sway), near arm + head (one wave on a
- * delay), speech bubble (arrives last so the room reads first).
+ * delay), speech bubble (last, so the room reads first).
  */
 
 const T = { wave: 2.4, bubble: 3.5 };
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-/** Lit windows in the skyline: [x, y, opacity]. */
-const LIT: [number, number, number][] = [
-  [905, 418, 1], [929, 470, 1], [1005, 288, 1], [1024, 288, 1], [1043, 340, 1],
-  [1005, 392, 1], [1024, 444, 1], [1043, 470, 1], [1148, 382, 1], [1167, 434, 1],
-  [1148, 486, 1], [957, 330, 0.7], [976, 382, 0.7], [1198, 316, 0.7],
-  [1198, 420, 0.7], [1071, 446, 0.7],
+const LIT_A: [number, number, number][] = [
+  [656, 270, 1], [674, 312, 1], [656, 366, 1], [710, 330, 1], [726, 398, 1],
+  [758, 252, 1], [776, 306, 1], [758, 410, 1], [610, 340, 0.7],
 ];
+const LIT_B: [number, number, number][] = [
+  [936, 258, 1], [954, 300, 1], [936, 354, 1], [954, 420, 1], [990, 320, 1],
+  [1006, 386, 1], [1038, 284, 1], [1058, 340, 1], [1038, 424, 1], [890, 310, 0.7],
+];
+const BULBS = [82, 264, 452, 640, 832, 1020, 1208, 1382];
+const STAR = (x: number, y: number) =>
+  `M${x} ${y} l5 11 12 1 -9 9 3 12 -11 -6 -11 6 3 -12 -9 -9 12 -1 Z`;
 
 export function RoomScene({ reduced = false }: { reduced?: boolean }) {
   const { hair, skin, top } = intro.character;
@@ -41,7 +47,6 @@ export function RoomScene({ reduced = false }: { reduced?: boolean }) {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  const swayTransition = { duration: 5.2, repeat: Infinity, ease: "easeInOut" as const };
   const waveTransition = reduced
     ? { duration: 0 }
     : {
@@ -72,222 +77,286 @@ export function RoomScene({ reduced = false }: { reduced?: boolean }) {
           <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" />
         </filter>
 
-        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#141f36" />
-          <stop offset="55%" stopColor="#22314a" />
-          <stop offset="100%" stopColor="#3b4a63" />
-        </linearGradient>
-        <linearGradient id="lampGlow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f6e6ba" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#f6e6ba" stopOpacity="0" />
-        </linearGradient>
-        <radialGradient id="vig" cx="50%" cy="45%" r="74%">
+        <radialGradient id="vig" cx="50%" cy="45%" r="76%">
           <stop offset="58%" stopColor="#000000" stopOpacity="0" />
-          <stop offset="100%" stopColor="#2a1c10" stopOpacity="0.38" />
+          <stop offset="100%" stopColor="#2a1c10" stopOpacity="0.4" />
         </radialGradient>
+        <linearGradient id="mirrorGlass" x1="0" y1="0" x2="0.4" y2="1">
+          <stop offset="0%" stopColor="#cfd6d2" />
+          <stop offset="60%" stopColor="#b6bfbc" />
+          <stop offset="100%" stopColor="#9aa5a2" />
+        </linearGradient>
+        <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#c9a24d" />
+          <stop offset="100%" stopColor="#a8863b" />
+        </linearGradient>
 
-        <pattern id="winFar" width="16" height="22" patternUnits="userSpaceOnUse">
-          <rect width="16" height="22" fill="#25334b" />
-          <rect x="4" y="5" width="8" height="11" fill="#18233a" />
+        <pattern id="winFar" width="15" height="20" patternUnits="userSpaceOnUse">
+          <rect width="15" height="20" fill="#2a3850" />
+          <rect x="4" y="5" width="7" height="10" fill="#1a2540" />
         </pattern>
-        <pattern id="winNear" width="19" height="26" patternUnits="userSpaceOnUse">
-          <rect width="19" height="26" fill="#131d2f" />
-          <rect x="5" y="6" width="9" height="13" fill="#0a1220" />
+        <pattern id="winNear" width="17" height="23" patternUnits="userSpaceOnUse">
+          <rect width="17" height="23" fill="#161f33" />
+          <rect x="4" y="6" width="8" height="11" fill="#0b1220" />
+        </pattern>
+        <pattern id="winWine" width="17" height="23" patternUnits="userSpaceOnUse">
+          <rect width="17" height="23" fill="#42202b" />
+          <rect x="4" y="6" width="8" height="11" fill="#2a1119" />
+        </pattern>
+        <pattern id="winGreen" width="17" height="23" patternUnits="userSpaceOnUse">
+          <rect width="17" height="23" fill="#22403a" />
+          <rect x="4" y="6" width="8" height="11" fill="#122721" />
         </pattern>
         <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
           <path d="M0 0 V9" stroke="#1c1a17" strokeWidth="1.5" strokeOpacity="0.5" />
         </pattern>
       </defs>
 
-      {/* ============================== ROOM ============================== */}
       <g filter="url(#rough)">
-        <rect x="-20" y="-20" width="1480" height="720" fill="#ded3c0" />
-        <path d="M-20 668 Q400 660 1460 670 L1460 920 L-20 920 Z" fill="#7c5e46" />
+        {/* shell */}
+        <rect x="-20" y="-20" width="1480" height="700" fill="#ded3c0" />
+        <path d="M-20 660 Q400 652 1460 662 L1460 920 L-20 920 Z" fill="#7c5e46" />
         <g stroke="#63482f" strokeWidth="2.5" opacity="0.75" fill="none">
-          <path d="M-20 714 Q500 706 1460 716 M-20 770 Q600 762 1460 772 M-20 830 Q520 822 1460 832" />
-          <path d="M214 670 Q212 692 216 714 M694 716 Q690 742 696 770 M1084 668 Q1088 692 1082 714 M424 830 Q428 862 422 900 M986 770 Q982 800 988 830" />
+          <path d="M-20 706 Q500 698 1460 708 M-20 764 Q600 756 1460 766 M-20 826 Q520 818 1460 828" />
+          <path d="M214 662 Q212 684 216 706 M694 708 Q690 736 696 764 M1084 662 Q1088 684 1082 706 M424 826 Q428 860 422 900 M986 764 Q982 796 988 826" />
         </g>
-        <path d="M-20 654 Q500 648 1460 656 L1460 674 Q500 666 -20 672 Z" fill="#cec2ae" />
-        <path d="M-20 654 Q500 648 1460 656" stroke="#1c1a17" strokeWidth="3.5" fill="none" />
+        <path d="M-20 646 Q500 640 1460 648 L1460 666 Q500 658 -20 664 Z" fill="#cec2ae" />
+        <path d="M-20 646 Q500 640 1460 648" stroke="#1c1a17" strokeWidth="3.5" fill="none" />
 
-        {/* rug */}
-        <g>
-          <path d="M336 708 Q700 700 1052 710 Q1058 786 1046 856 Q700 866 342 854 Q330 782 336 708 Z" fill="#6e2733" opacity="0.42" />
-          <path d="M336 708 Q700 700 1052 710 Q1058 786 1046 856 Q700 866 342 854 Q330 782 336 708 Z" fill="none" stroke="#1c1a17" strokeWidth="2.5" opacity="0.45" />
-          <path d="M362 728 Q700 720 1026 730 Q1032 780 1022 836 Q700 844 366 834 Q356 780 362 728 Z" fill="none" stroke="#1c1a17" strokeWidth="1.4" opacity="0.3" />
+        {/* string lights */}
+        <path
+          d="M-10 34 Q170 108 356 40 Q548 108 736 38 Q928 108 1116 40 Q1300 106 1450 36"
+          fill="none"
+          stroke="#1c1a17"
+          strokeWidth="2"
+          opacity="0.8"
+        />
+        <g fill="#c9a24d" stroke="#1c1a17" strokeWidth="1.5">
+          {BULBS.map((x, i) => (
+            <circle key={x} cx={x} cy={i === 7 ? 66 : i === 0 || i === 6 ? 74 : 76} r="7" />
+          ))}
+        </g>
+        <g stroke="#1c1a17" strokeWidth="1.6" fill="#c9a24d">
+          <path d="M170 96 v22" />
+          <path d={STAR(170, 118)} />
+          <path d="M548 96 v26" />
+          <path d={STAR(548, 122)} />
+          <path d="M928 96 v20" />
+          <path d={STAR(928, 116)} />
+          <path d="M1300 92 v24" />
+          <path d={STAR(1300, 116)} />
         </g>
 
-        {/* window */}
+        {/* window A */}
         <g>
-          <path d="M878 112 Q1054 106 1232 112 Q1238 316 1232 520 Q1054 526 878 520 Q872 316 878 112 Z" fill="url(#sky)" />
-          <circle cx="1172" cy="172" r="19" fill="#eee5cf" opacity="0.85" />
-          <circle cx="1164" cy="166" r="19" fill="#22314a" opacity="0.55" />
-
-          <g>
-            <rect x="878" y="360" width="62" height="160" fill="url(#winFar)" />
-            <rect x="946" y="316" width="48" height="204" fill="url(#winFar)" />
-            <rect x="1084" y="338" width="56" height="182" fill="url(#winFar)" />
-            <rect x="1186" y="300" width="46" height="220" fill="url(#winFar)" />
-          </g>
-          <g>
-            <rect x="900" y="404" width="54" height="116" fill="url(#winNear)" />
-            <path d="M996 262 h72 v258 h-72 Z" fill="url(#winNear)" />
-            <path d="M1004 262 h56 v-22 h-56 Z" fill="#131d2f" />
-            <path d="M1030 240 v-34" stroke="#131d2f" strokeWidth="6" />
-            <rect x="1140" y="368" width="52" height="152" fill="url(#winNear)" />
-            <rect x="1064" y="430" width="34" height="90" fill="url(#winNear)" />
-            <g fill="#131d2f">
-              <path d="M910 404 l-8 -22 h30 l-8 22 Z" />
-              <path d="M906 382 h26 v-14 h-26 Z" />
-              <path d="M1150 368 l-7 -18 h26 l-7 18 Z" />
-            </g>
-          </g>
+          <path d="M598 108 Q700 104 802 108 Q806 290 802 472 Q700 476 598 472 Q594 290 598 108 Z" fill="#1c2a44" />
+          <rect x="602" y="300" width="40" height="172" fill="url(#winFar)" />
+          <rect x="648" y="252" width="46" height="220" fill="url(#winWine)" />
+          <rect x="700" y="290" width="42" height="182" fill="url(#winNear)" />
+          <rect x="748" y="230" width="52" height="242" fill="url(#winGreen)" />
           <g fill="#c9a24d">
-            {LIT.map(([x, y, o]) => (
-              <rect key={`${x}-${y}`} x={x} y={y} width="9" height="13" opacity={o} />
+            {LIT_A.map(([x, y, o]) => (
+              <rect key={`a${x}-${y}`} x={x} y={y} width="8" height="11" opacity={o} />
             ))}
           </g>
-
-          <path d="M878 112 Q1054 106 1232 112 Q1238 316 1232 520 Q1054 526 878 520 Q872 316 878 112 Z" fill="none" stroke="#1c1a17" strokeWidth="5" />
-          <path d="M1054 108 Q1050 316 1054 524" stroke="#1c1a17" strokeWidth="5" fill="none" />
-          <path d="M876 302 Q1054 296 1234 302" stroke="#1c1a17" strokeWidth="5" fill="none" />
-          <path d="M858 518 Q1054 512 1250 518 Q1252 530 1250 538 Q1054 544 858 538 Z" fill="#d2c7b3" stroke="#1c1a17" strokeWidth="3" />
+          <path d="M598 108 Q700 104 802 108 Q806 290 802 472 Q700 476 598 472 Q594 290 598 108 Z" fill="none" stroke="#1c1a17" strokeWidth="5" />
+          <path d="M700 106 Q696 290 700 474 M596 280 Q700 276 804 280" stroke="#1c1a17" strokeWidth="4.5" fill="none" />
+          <path d="M582 470 Q700 464 818 470 Q820 482 818 490 Q700 496 582 490 Z" fill="#d2c7b3" stroke="#1c1a17" strokeWidth="3" />
         </g>
 
-        {/* curtains */}
+        {/* window B */}
         <g>
-          <path d="M846 96 Q1054 90 1266 96" stroke="#a8863b" strokeWidth="7" fill="none" strokeLinecap="round" />
-          <circle cx="842" cy="96" r="8" fill="#a8863b" stroke="#1c1a17" strokeWidth="2" />
-          <circle cx="1270" cy="96" r="8" fill="#a8863b" stroke="#1c1a17" strokeWidth="2" />
-          <g fill="#efe9dd" opacity="0.42" stroke="#1c1a17" strokeOpacity="0.3" strokeWidth="1.5">
-            <path d="M852 100 Q866 300 856 528 Q886 536 902 526 Q890 300 900 100 Z" />
-            <path d="M900 100 Q890 300 902 526 Q926 534 944 522 Q930 300 942 100 Z" />
-            <path d="M1166 100 Q1152 300 1164 522 Q1184 534 1204 526 Q1192 300 1204 100 Z" />
-            <path d="M1204 100 Q1192 300 1204 526 Q1226 536 1252 528 Q1240 300 1252 100 Z" />
+          <path d="M878 108 Q980 104 1082 108 Q1086 290 1082 472 Q980 476 878 472 Q874 290 878 108 Z" fill="#1c2a44" />
+          <circle cx="1044" cy="164" r="17" fill="#eee5cf" opacity="0.85" />
+          <circle cx="1037" cy="158" r="17" fill="#1c2a44" opacity="0.6" />
+          <rect x="878" y="286" width="44" height="186" fill="url(#winFar)" />
+          <rect x="928" y="238" width="48" height="234" fill="url(#winNear)" />
+          <rect x="982" y="300" width="40" height="172" fill="url(#winWine)" />
+          <rect x="1028" y="264" width="54" height="208" fill="url(#winFar)" />
+          <g fill="#131d2f">
+            <path d="M938 238 l-7 -18 h26 l-7 18 Z" />
+            <path d="M934 220 h22 v-12 h-22 Z" />
           </g>
-          <g stroke="#1c1a17" strokeOpacity="0.16" strokeWidth="1.2" fill="none">
-            <path d="M872 104 Q862 310 870 526 M918 104 Q908 310 918 524 M1184 104 Q1174 310 1184 526 M1228 104 Q1218 310 1228 524" />
+          <g fill="#c9a24d">
+            {LIT_B.map(([x, y, o]) => (
+              <rect key={`b${x}-${y}`} x={x} y={y} width="8" height="11" opacity={o} />
+            ))}
+          </g>
+          <path d="M878 108 Q980 104 1082 108 Q1086 290 1082 472 Q980 476 878 472 Q874 290 878 108 Z" fill="none" stroke="#1c1a17" strokeWidth="5" />
+          <path d="M980 106 Q976 290 980 474 M876 280 Q980 276 1084 280" stroke="#1c1a17" strokeWidth="4.5" fill="none" />
+          <path d="M862 470 Q980 464 1098 470 Q1100 482 1098 490 Q980 496 862 490 Z" fill="#d2c7b3" stroke="#1c1a17" strokeWidth="3" />
+        </g>
+
+        {/* rods + sheers */}
+        <g>
+          <path d="M572 92 Q700 88 828 92 M852 92 Q980 88 1108 92" stroke="#a8863b" strokeWidth="6" fill="none" strokeLinecap="round" />
+          <g fill="#efe9dd" opacity="0.4" stroke="#1c1a17" strokeOpacity="0.28" strokeWidth="1.4">
+            <path d="M578 96 Q590 280 580 480 Q604 488 620 478 Q610 280 620 96 Z" />
+            <path d="M782 96 Q772 280 784 478 Q804 488 824 480 Q812 280 824 96 Z" />
+            <path d="M858 96 Q870 280 860 480 Q884 488 900 478 Q890 280 900 96 Z" />
+            <path d="M1062 96 Q1052 280 1064 478 Q1084 488 1104 480 Q1092 280 1104 96 Z" />
           </g>
         </g>
 
-        {/* artwork */}
+        {/* left wall art */}
         <g>
-          <path d="M176 140 Q272 134 370 140 Q376 246 370 352 Q272 358 176 352 Q170 246 176 140 Z" fill="#efe9dd" stroke="#a8863b" strokeWidth="6" />
-          <path d="M206 292 A 68 66 0 0 1 340 292 Z" fill="#6e2733" />
-          <path d="M198 292 Q272 288 348 292" stroke="#22314a" strokeWidth="7" fill="none" />
-          <path d="M206 170 q30 -2 30 28 q-30 3 -30 -28 Z" fill="#2f5d50" />
-          <path d="M172 356 Q272 352 374 356" stroke="#1c1a17" strokeWidth="4" strokeOpacity="0.22" fill="none" />
+          <path d="M118 150 Q204 144 292 150 Q298 236 292 322 Q204 328 118 322 Q112 236 118 150 Z" fill="#efe9dd" stroke="#a8863b" strokeWidth="6" />
+          <path d="M144 272 A 60 58 0 0 1 264 272 Z" fill="#6e2733" />
+          <path d="M138 272 Q204 268 270 272" stroke="#22314a" strokeWidth="6" fill="none" />
+          <path d="M144 176 q26 -2 26 24 q-26 3 -26 -24 Z" fill="#2f5d50" />
+        </g>
+        <g>
+          <path d="M330 196 Q382 192 436 196 Q440 246 436 296 Q382 300 330 296 Q326 246 330 196 Z" fill="#efe9dd" stroke="#1c1a17" strokeWidth="3.5" />
+          <path d="M344 272 Q368 232 392 256 Q408 272 424 244" stroke="#22314a" strokeWidth="4" fill="none" />
+          <circle cx="410" cy="218" r="10" fill="#c9a24d" />
+        </g>
+
+        {/* mirror */}
+        <g>
+          <path d="M1236 156 Q1318 148 1400 156 Q1408 274 1400 392 Q1318 400 1236 392 Q1228 274 1236 156 Z" fill="url(#mirrorGlass)" stroke="#a8863b" strokeWidth="6" />
+          <path d="M1262 366 Q1290 250 1268 180" stroke="#efe9dd" strokeWidth="14" opacity="0.5" fill="none" />
+          <path d="M1352 372 Q1372 280 1358 196" stroke="#efe9dd" strokeWidth="8" opacity="0.35" fill="none" />
+        </g>
+
+        {/* side table, books, lamp */}
+        <g>
+          <path d="M34 502 Q124 496 216 502 Q220 514 216 524 Q124 530 34 524 Q30 514 34 502 Z" fill="#7c5e46" stroke="#1c1a17" strokeWidth="3" />
+          <path d="M48 524 Q46 592 50 656 M200 524 Q202 592 198 656" stroke="#6b4f39" strokeWidth="9" strokeLinecap="round" fill="none" />
+          <path d="M48 596 Q124 604 200 596" stroke="#6b4f39" strokeWidth="6" fill="none" />
+          <g stroke="#1c1a17" strokeWidth="2.5">
+            <path d="M48 484 Q92 480 138 484 Q140 492 138 501 Q92 505 48 501 Z" fill="#22314a" />
+            <path d="M42 466 Q90 462 140 466 Q142 475 140 484 Q90 488 42 484 Z" fill="#6e2733" />
+            <path d="M52 450 Q92 446 134 450 Q136 458 134 467 Q92 471 52 467 Z" fill="#efe9dd" />
+            <path d="M46 434 Q92 430 138 434 Q140 442 138 451 Q92 455 46 451 Z" fill="#2f5d50" />
+          </g>
+          <g>
+            <path d="M156 502 Q182 498 208 502 Q210 508 208 512 Q182 516 156 512 Z" fill="#a8863b" stroke="#1c1a17" strokeWidth="2" />
+            <path d="M178 502 q8 -2 10 0 l-2 -46 q-6 -2 -8 0 Z" fill="#a8863b" stroke="#1c1a17" strokeWidth="2" />
+            <path d="M148 456 Q182 450 218 456 L208 400 Q182 396 158 400 Z" fill="url(#shade)" stroke="#1c1a17" strokeWidth="3" strokeLinejoin="round" />
+            <path d="M150 458 Q182 494 214 458" fill="#f6e6ba" opacity="0.45" />
+          </g>
+        </g>
+
+        {/* dresser */}
+        <g>
+          <path d="M1150 540 Q1288 532 1428 540 Q1434 612 1428 684 Q1288 692 1150 684 Q1144 612 1150 540 Z" fill="#2f5d50" stroke="#1c1a17" strokeWidth="3.5" />
+          <path d="M1150 588 Q1288 582 1428 588 M1150 636 Q1288 630 1428 636" stroke="#1c1a17" strokeWidth="2.5" opacity="0.55" fill="none" />
+          <g fill="#a8863b" stroke="#1c1a17" strokeWidth="1.6">
+            <circle cx="1220" cy="564" r="6" /><circle cx="1358" cy="564" r="6" />
+            <circle cx="1220" cy="612" r="6" /><circle cx="1358" cy="612" r="6" />
+            <circle cx="1220" cy="660" r="6" /><circle cx="1358" cy="660" r="6" />
+          </g>
+          <path d="M1168 684 Q1166 700 1170 714 M1410 684 Q1412 700 1408 714" stroke="#1c1a17" strokeWidth="6" strokeLinecap="round" fill="none" />
+          <g>
+            <path d="M1176 490 Q1250 484 1326 490 Q1330 514 1326 540 Q1250 546 1176 540 Q1172 514 1176 490 Z" fill="#2b2724" stroke="#1c1a17" strokeWidth="3" />
+            <ellipse cx="1242" cy="514" rx="38" ry="12" fill="#14110f" stroke="#1c1a17" strokeWidth="2" />
+            <ellipse cx="1242" cy="514" rx="11" ry="4" fill="#6e2733" />
+            <path d="M1306 498 Q1296 508 1288 518" stroke="#a8863b" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+            <circle cx="1308" cy="496" r="4.5" fill="#a8863b" stroke="#1c1a17" strokeWidth="1.5" />
+          </g>
+          <g>
+            <path d="M1362 540 Q1388 536 1412 540 Q1416 506 1396 494 Q1388 490 1378 494 Q1358 506 1362 540 Z" fill="#8c4a3a" stroke="#1c1a17" strokeWidth="3" />
+            <g stroke="#2f5d50" strokeWidth="3" fill="none">
+              <path d="M1386 494 Q1378 452 1360 428 M1390 494 Q1400 456 1420 436" />
+            </g>
+            <path d="M1356 424 q10 -14 22 -2 q-10 12 -22 2 Z" fill="#2f5d50" />
+            <path d="M1416 432 q12 -12 22 2 q-12 10 -22 -2 Z" fill="#2f5d50" />
+          </g>
         </g>
 
         {/* plant */}
         <g>
-          <path d="M40 670 Q90 664 140 670 L126 748 Q88 754 52 748 Z" fill="#8c4a3a" stroke="#1c1a17" strokeWidth="3" />
-          <path d="M34 660 Q90 654 146 660 Q148 672 146 678 Q90 684 34 678 Z" fill="#9c5844" stroke="#1c1a17" strokeWidth="3" />
+          <path d="M1102 592 Q1136 588 1170 592 L1160 662 Q1134 668 1110 662 Z" fill="#8c4a3a" stroke="#1c1a17" strokeWidth="3" />
+          <path d="M1096 584 Q1136 580 1176 584 Q1178 594 1176 600 Q1136 606 1096 600 Z" fill="#9c5844" stroke="#1c1a17" strokeWidth="3" />
           <g fill="#2f5d50" stroke="#1c1a17" strokeWidth="2.5">
-            <path d="M90 662 Q50 568 18 510 Q68 522 94 580 Q102 622 90 662 Z" />
-            <path d="M92 662 Q98 546 82 452 Q126 500 124 590 Q118 636 92 662 Z" />
-            <path d="M94 662 Q138 576 190 536 Q178 606 130 648 Q112 660 94 662 Z" />
-            <path d="M92 662 Q130 466 172 396 Q182 494 130 606 Q112 644 92 662 Z" />
+            <path d="M1134 584 Q1104 508 1082 462 Q1118 474 1136 518 Q1142 552 1134 584 Z" />
+            <path d="M1136 584 Q1142 494 1130 422 Q1162 460 1160 528 Q1156 562 1136 584 Z" />
+            <path d="M1138 584 Q1172 518 1210 486 Q1202 540 1166 574 Q1152 584 1138 584 Z" />
           </g>
-          <g stroke="#1b3d33" strokeWidth="2" fill="none" opacity="0.85">
-            <path d="M88 648 Q60 566 30 518 M90 644 Q96 548 86 468 M94 646 Q132 588 180 546 M92 644 Q128 496 166 418" />
-          </g>
-          <ellipse cx="92" cy="756" rx="70" ry="10" fill="#1c1a17" opacity="0.2" />
         </g>
 
-        {/* console + record player */}
+        {/* rug */}
         <g>
-          <path d="M1244 586 Q1336 580 1428 586 Q1432 632 1428 678 Q1336 684 1244 678 Q1240 632 1244 586 Z" fill="#7c5e46" stroke="#1c1a17" strokeWidth="3" />
-          <path d="M1244 622 Q1336 616 1428 622" stroke="#1c1a17" strokeWidth="2" opacity="0.45" fill="none" />
-          <path d="M1268 678 Q1266 692 1270 708 M1404 678 Q1406 692 1402 708" stroke="#1c1a17" strokeWidth="6" strokeLinecap="round" fill="none" />
-          <path d="M1262 540 Q1336 534 1412 540 Q1416 562 1412 586 Q1336 592 1262 586 Q1258 562 1262 540 Z" fill="#2b2724" stroke="#1c1a17" strokeWidth="3" />
-          <ellipse cx="1328" cy="562" rx="40" ry="13" fill="#14110f" stroke="#1c1a17" strokeWidth="2" />
-          <ellipse cx="1328" cy="562" rx="12" ry="4" fill="#6e2733" />
-          <path d="M1392 546 Q1382 556 1372 566" stroke="#a8863b" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-          <circle cx="1394" cy="544" r="4.5" fill="#a8863b" stroke="#1c1a17" strokeWidth="1.5" />
+          <path d="M356 706 Q712 698 1064 708 Q1070 784 1058 854 Q712 864 362 852 Q350 780 356 706 Z" fill="#6e2733" opacity="0.4" />
+          <path d="M356 706 Q712 698 1064 708 Q1070 784 1058 854 Q712 864 362 852 Q350 780 356 706 Z" fill="none" stroke="#1c1a17" strokeWidth="2.5" opacity="0.42" />
+          <path d="M382 726 Q712 718 1038 728 Q1044 778 1034 834 Q712 842 386 832 Q376 778 382 726 Z" fill="none" stroke="#1c1a17" strokeWidth="1.4" opacity="0.28" />
         </g>
 
-        {/* books */}
-        <g stroke="#1c1a17" strokeWidth="2.5">
-          <path d="M1056 640 Q1110 636 1162 640 Q1164 648 1162 657 Q1110 661 1056 657 Z" fill="#22314a" />
-          <path d="M1048 622 Q1108 618 1166 622 Q1168 631 1166 640 Q1108 644 1048 640 Z" fill="#6e2733" />
-          <path d="M1062 605 Q1110 601 1158 605 Q1160 614 1158 623 Q1110 627 1062 623 Z" fill="#efe9dd" />
-          <path d="M1052 588 Q1108 584 1164 588 Q1166 597 1164 606 Q1108 610 1052 606 Z" fill="#2f5d50" />
-          <path d="M1066 574 Q1110 570 1154 574 Q1156 581 1154 589 Q1110 593 1066 589 Z" fill="#a8863b" />
+        {/* boots */}
+        <g fill="#2a2622" stroke="#1c1a17" strokeWidth="2.5">
+          <path d="M1196 700 q22 -4 30 2 l4 52 q-4 8 -16 8 q-12 0 -16 -8 Z" />
+          <path d="M1194 758 q34 -6 40 4 q2 10 -14 12 q-22 2 -28 -6 Z" />
+          <path d="M1246 704 q22 -4 30 2 l4 50 q-4 8 -16 8 q-12 0 -16 -8 Z" />
+          <path d="M1244 760 q34 -6 40 4 q2 10 -14 12 q-22 2 -28 -6 Z" />
+        </g>
+
+        {/* a garment left on the floor */}
+        <g>
+          <path d="M292 780 Q340 758 396 772 Q430 782 418 806 Q380 828 322 822 Q282 812 292 780 Z" fill="#efe9dd" stroke="#1c1a17" strokeWidth="2.5" />
+          <path d="M310 792 Q352 780 396 790" stroke="#1c1a17" strokeOpacity="0.3" strokeWidth="2" fill="none" />
         </g>
 
         {/* bed */}
         <g>
-          <path d="M250 612 Q620 604 992 612 Q996 644 992 674 Q620 682 250 674 Q246 644 250 612 Z" fill="#6b4f39" stroke="#1c1a17" strokeWidth="3" />
-          <path d="M240 508 Q620 498 1002 508 Q1008 562 1002 618 Q620 628 240 618 Q234 562 240 508 Z" fill="#efe9dd" stroke="#1c1a17" strokeWidth="3.5" />
+          <path d="M250 606 Q620 598 992 606 Q996 640 992 672 Q620 680 250 672 Q246 640 250 606 Z" fill="#6b4f39" stroke="#1c1a17" strokeWidth="3" />
+          <path d="M240 502 Q620 492 1002 502 Q1008 558 1002 614 Q620 624 240 614 Q234 558 240 502 Z" fill="#efe9dd" stroke="#1c1a17" strokeWidth="3.5" />
           <g stroke="#cfc4af" strokeWidth="6" fill="none" strokeLinecap="round" opacity="0.9">
-            <path d="M250 572 Q620 596 996 570" />
-            <path d="M262 592 Q620 612 986 590" />
+            <path d="M250 568 Q620 592 996 566" />
+            <path d="M262 588 Q620 608 986 586" />
           </g>
-          <path d="M244 618 Q620 630 1000 616 L1000 626 Q620 640 244 628 Z" fill="url(#hatch)" opacity="0.16" />
+          <path d="M244 614 Q620 626 1000 612 L1000 622 Q620 636 244 624 Z" fill="url(#hatch)" opacity="0.16" />
           <g>
-            <path d="M254 452 Q322 442 392 452 Q398 486 392 518 Q322 528 254 518 Q248 486 254 452 Z" fill="#e5ddcd" stroke="#1c1a17" strokeWidth="3" />
-            <path d="M272 470 Q322 464 376 470" stroke="#1c1a17" strokeOpacity="0.28" strokeWidth="2" fill="none" />
+            <path d="M254 448 Q322 438 392 448 Q398 482 392 514 Q322 524 254 514 Q248 482 254 448 Z" fill="#e5ddcd" stroke="#1c1a17" strokeWidth="3" />
+            <path d="M272 466 Q322 460 376 466" stroke="#1c1a17" strokeOpacity="0.28" strokeWidth="2" fill="none" />
           </g>
           <g>
-            <path d="M884 506 Q944 500 1002 506 Q1006 562 1002 616 Q944 622 884 616 Q880 562 884 506 Z" fill="#2f5d50" stroke="#1c1a17" strokeWidth="3" />
-            <path d="M884 548 Q944 542 1002 548 M884 582 Q944 576 1002 582" stroke="#1c1a17" strokeOpacity="0.32" strokeWidth="2" fill="none" />
+            <path d="M884 502 Q944 496 1002 502 Q1006 558 1002 612 Q944 618 884 612 Q880 558 884 502 Z" fill="#2f5d50" stroke="#1c1a17" strokeWidth="3" />
+            <path d="M884 544 Q944 538 1002 544 M884 578 Q944 572 1002 578" stroke="#1c1a17" strokeOpacity="0.32" strokeWidth="2" fill="none" />
           </g>
-          <ellipse cx="620" cy="690" rx="392" ry="16" fill="#1c1a17" opacity="0.22" />
-        </g>
-
-        {/* arc lamp */}
-        <g>
-          <ellipse cx="205" cy="668" rx="50" ry="11" fill="#1c1a17" />
-          <path d="M199 600 q6 -2 12 0 l-2 68 q-4 2 -8 0 Z" fill="#a8863b" stroke="#1c1a17" strokeWidth="2" />
-          <path d="M205 604 C 205 380, 262 208, 424 200" fill="none" stroke="#a8863b" strokeWidth="9" strokeLinecap="round" />
-          <path d="M382 200 Q424 194 468 200 L446 252 Q424 256 404 252 Z" fill="#a8863b" stroke="#1c1a17" strokeWidth="3" strokeLinejoin="round" />
-          <ellipse cx="425" cy="253" rx="16" ry="7" fill="#f6e6ba" />
-          <path d="M394 256 L332 476 H518 L456 256 Z" fill="url(#lampGlow)" />
+          <ellipse cx="620" cy="686" rx="392" ry="15" fill="#1c1a17" opacity="0.22" />
         </g>
       </g>
 
-      {/* ====================== FIGURE — lower body ======================= */}
+      {/* figure — lower body */}
       <g filter="url(#roughSoft)">
         <path
-          d="M428 516 Q500 508 572 516 Q576 542 572 568 Q500 576 428 568 Q424 542 428 516 Z"
+          d="M428 512 Q500 504 572 512 Q576 538 572 564 Q500 572 428 564 Q424 538 428 512 Z"
           fill="#e5ddcd"
           stroke="#1c1a17"
           strokeWidth="3"
-          transform="rotate(-4 500 542)"
+          transform="rotate(-4 500 538)"
         />
-        <path d="M520 530 Q476 558 432 582" stroke="#57202a" strokeWidth="19" strokeLinecap="round" fill="none" />
-        <ellipse cx="426" cy="585" rx="13" ry="10" fill="#c9986f" stroke="#1c1a17" strokeWidth="2" />
-        <path d="M668 566 Q744 564 800 584" stroke="#2a2622" strokeWidth="46" strokeLinecap="round" fill="none" />
+        <path d="M520 526 Q476 554 432 578" stroke="#57202a" strokeWidth="19" strokeLinecap="round" fill="none" />
+        <ellipse cx="426" cy="581" rx="13" ry="10" fill="#c9986f" stroke="#1c1a17" strokeWidth="2" />
+        <path d="M668 562 Q744 560 800 580" stroke="#2a2622" strokeWidth="46" strokeLinecap="round" fill="none" />
       </g>
 
-      {/* shins — deliberately unfiltered: they animate every frame */}
+      {/* shins — unfiltered on purpose, they animate every frame */}
       <motion.g
-        style={{ transformBox: "view-box", transformOrigin: "800px 586px" }}
+        style={{ transformBox: "view-box", transformOrigin: "800px 582px" }}
         animate={reduced ? {} : { rotate: [-5, 5, -5] }}
-        transition={swayTransition}
+        transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
       >
-        <path d="M800 586 Q828 512 838 450" stroke="#2a2622" strokeWidth="33" strokeLinecap="round" fill="none" />
-        <path d="M796 588 Q854 522 874 464" stroke="#3b352e" strokeWidth="30" strokeLinecap="round" fill="none" />
-        <path d="M838 450 Q832 424 848 416 Q866 412 864 434 Q862 448 852 456 Z" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
-        <path d="M874 464 Q880 440 896 436 Q910 436 904 454 Q898 468 888 472 Z" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
+        <path d="M800 582 Q828 508 838 446" stroke="#2a2622" strokeWidth="33" strokeLinecap="round" fill="none" />
+        <path d="M796 584 Q854 518 874 460" stroke="#3b352e" strokeWidth="30" strokeLinecap="round" fill="none" />
+        <path d="M838 446 Q832 420 848 412 Q866 408 864 430 Q862 444 852 452 Z" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
+        <path d="M874 460 Q880 436 896 432 Q910 432 904 450 Q898 464 888 468 Z" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
       </motion.g>
 
-      {/* ====================== FIGURE — upper body ======================= */}
+      {/* figure — upper body */}
       <g filter="url(#roughSoft)">
         <path
-          d="M504 498 Q580 484 650 512 Q694 530 692 560 Q686 586 632 584 Q558 580 506 552 Z"
+          d="M504 494 Q580 480 650 508 Q694 526 692 556 Q686 582 632 580 Q558 576 506 548 Z"
           fill={top}
           stroke="#1c1a17"
           strokeWidth="3"
           strokeLinejoin="round"
         />
-        <path d="M600 500 Q624 538 612 578" stroke="#1c1a17" strokeWidth="2" fill="none" opacity="0.28" />
-        <path d="M664 536 Q678 558 662 578" stroke="#1c1a17" strokeWidth="2.5" fill="none" opacity="0.45" />
+        <path d="M600 496 Q624 534 612 574" stroke="#1c1a17" strokeWidth="2" fill="none" opacity="0.28" />
+        <path d="M664 532 Q678 554 662 574" stroke="#1c1a17" strokeWidth="2.5" fill="none" opacity="0.45" />
 
-        {/* head — tilts up on the wave */}
         <motion.g
-          style={{ transformBox: "view-box", transformOrigin: "500px 500px" }}
+          style={{ transformBox: "view-box", transformOrigin: "500px 496px" }}
           animate={reduced ? { rotate: 0 } : { rotate: [0, -8, -8, -8, 0] }}
           transition={
             reduced
@@ -295,51 +364,47 @@ export function RoomScene({ reduced = false }: { reduced?: boolean }) {
               : { duration: 2.4, delay: T.wave, times: [0, 0.2, 0.5, 0.8, 1], ease: "easeInOut" as const }
           }
         >
-          <path d="M492 434 Q532 442 542 480 Q550 520 528 552 Q512 574 494 566 Q512 534 508 500 Q504 468 488 448 Z" fill={hair} stroke="#1c1a17" strokeWidth="2" />
-          <ellipse cx="472" cy="466" rx="25" ry="23" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
-          <path d="M448 460 Q450 430 478 424 Q508 422 516 448 Q520 462 514 474 Q508 450 486 445 Q462 442 452 464 Z" fill={hair} />
-          <path d="M452 462 Q444 486 452 508 Q446 494 446 476 Q446 466 452 462 Z" fill={hair} />
-          <path d="M452 461 Q459 456 466 461" stroke="#1c1a17" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-          <path d="M454 480 Q462 485 472 479" stroke="#1c1a17" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+          <path d="M492 430 Q532 438 542 476 Q550 516 528 548 Q512 570 494 562 Q512 530 508 496 Q504 464 488 444 Z" fill={hair} stroke="#1c1a17" strokeWidth="2" />
+          <ellipse cx="472" cy="462" rx="25" ry="23" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
+          <path d="M448 456 Q450 426 478 420 Q508 418 516 444 Q520 458 514 470 Q508 446 486 441 Q462 438 452 460 Z" fill={hair} />
+          <path d="M452 458 Q444 482 452 504 Q446 490 446 472 Q446 462 452 458 Z" fill={hair} />
+          <path d="M452 457 Q459 452 466 457" stroke="#1c1a17" strokeWidth="2.4" fill="none" strokeLinecap="round" />
+          <path d="M454 476 Q462 481 472 475" stroke="#1c1a17" strokeWidth="2.2" fill="none" strokeLinecap="round" />
         </motion.g>
 
-        {/* near forearm — rests on the laptop, then raises to wave */}
         <motion.g
-          style={{ transformBox: "view-box", transformOrigin: "520px 518px" }}
+          style={{ transformBox: "view-box", transformOrigin: "520px 514px" }}
           animate={{ rotate: reduced ? 0 : [0, -78, -64, -82, -66, -78, 0] }}
           transition={waveTransition}
         >
-          <path d="M520 518 Q510 548 482 558 Q458 568 440 576" stroke={top} strokeWidth="21" strokeLinecap="round" fill="none" />
-          <path d="M452 570 Q458 580 452 588" stroke="#1c1a17" strokeWidth="2" fill="none" opacity="0.4" />
-          <ellipse cx="432" cy="580" rx="14" ry="11" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
+          <path d="M520 514 Q510 544 482 554 Q458 564 440 572" stroke={top} strokeWidth="21" strokeLinecap="round" fill="none" />
+          <ellipse cx="432" cy="576" rx="14" ry="11" fill={skin} stroke="#1c1a17" strokeWidth="2.5" />
         </motion.g>
 
-        {/* laptop */}
-        <path d="M318 608 Q380 604 444 599 Q442 591 438 583 Q376 588 312 592 Z" fill="#b9b2a6" stroke="#1c1a17" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M312 592 Q302 552 294 514 Q344 510 392 508 Q416 546 438 583 Z" fill="#cdc6ba" stroke="#1c1a17" strokeWidth="3" strokeLinejoin="round" />
-        <path d="M318 586 Q312 552 306 522" stroke="#1c1a17" strokeWidth="1.6" opacity="0.3" fill="none" />
+        <path d="M318 604 Q380 600 444 595 Q442 587 438 579 Q376 584 312 588 Z" fill="#b9b2a6" stroke="#1c1a17" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M312 588 Q302 548 294 510 Q344 506 392 504 Q416 542 438 579 Z" fill="#cdc6ba" stroke="#1c1a17" strokeWidth="3" strokeLinejoin="round" />
       </g>
 
-      {/* ============================= BUBBLE ============================= */}
+      {/* speech bubble */}
       <motion.g
         initial={reduced ? false : { opacity: 0, scale: 0.92, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={reduced ? { duration: 0 } : { duration: 0.5, delay: T.bubble, ease: EASE }}
-        style={{ transformBox: "view-box", transformOrigin: "540px 380px" }}
+        style={{ transformBox: "view-box", transformOrigin: "380px 360px" }}
       >
         <g filter="url(#roughSoft)">
           <path
-            d="M528 208 Q504 206 504 232 L502 330 Q502 354 526 355 L560 356 L512 404 L604 357 L836 352 Q860 350 859 326 L855 230 Q854 206 830 207 Z"
+            d="M352 186 Q328 184 328 210 L326 306 Q326 330 350 331 L384 332 L336 380 L428 333 L676 328 Q700 326 699 302 L695 208 Q694 184 670 185 Z"
             fill="#f4efe4"
             stroke="#1c1a17"
             strokeWidth="3.5"
             strokeLinejoin="round"
           />
         </g>
-        <text x="536" y="272" fill="#1c1a17" fontSize="38" fontStyle="italic" fontFamily="var(--font-display), Georgia, serif">
+        <text x="358" y="248" fill="#1c1a17" fontSize="34" fontStyle="italic" fontFamily="var(--font-display), Georgia, serif">
           {intro.greeting[0]}
         </text>
-        <text x="536" y="322" fill="#1c1a17" fontSize="38" fontStyle="italic" fontFamily="var(--font-display), Georgia, serif">
+        <text x="358" y="296" fill="#1c1a17" fontSize="34" fontStyle="italic" fontFamily="var(--font-display), Georgia, serif">
           {intro.greeting[1]}
         </text>
       </motion.g>
