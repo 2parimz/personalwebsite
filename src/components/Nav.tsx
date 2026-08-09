@@ -66,11 +66,7 @@ export function Nav() {
         </div>
 
         <span className="kicker hidden text-fg/40 sm:block">
-          {theme === "noir"
-            ? "Director's cut"
-            : theme === "party"
-              ? "Alter ego"
-              : site.location}
+          {theme === "noir" ? "Director's cut" : site.location}
         </span>
       </nav>
     </motion.header>

@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { PuppetHead } from "@/components/art/Puppet";
+import { StarIcon } from "@/components/StarIcon";
 
 /**
- * A small side-eyeing puppet follows the pointer. Desktop only — it never
- * mounts on touch devices or for visitors who asked for reduced motion.
+ * A small star trailing the pointer. Desktop only — it never mounts on
+ * touch devices or for visitors who asked for reduced motion.
  */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
@@ -14,8 +14,8 @@ export function CustomCursor() {
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
-  const sx = useSpring(x, { stiffness: 480, damping: 32, mass: 0.45 });
-  const sy = useSpring(y, { stiffness: 480, damping: 32, mass: 0.45 });
+  const sx = useSpring(x, { stiffness: 520, damping: 34, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 520, damping: 34, mass: 0.4 });
 
   useEffect(() => {
     const fine = window.matchMedia("(pointer: fine)").matches;
@@ -23,7 +23,6 @@ export function CustomCursor() {
     if (!fine || reduced) return;
 
     setEnabled(true);
-    document.documentElement.classList.add("has-puppet");
 
     function onMove(event: PointerEvent) {
       x.set(event.clientX);
@@ -35,10 +34,7 @@ export function CustomCursor() {
     }
 
     window.addEventListener("pointermove", onMove);
-    return () => {
-      window.removeEventListener("pointermove", onMove);
-      document.documentElement.classList.remove("has-puppet");
-    };
+    return () => window.removeEventListener("pointermove", onMove);
   }, [x, y]);
 
   if (!enabled) return null;
@@ -46,19 +42,15 @@ export function CustomCursor() {
   return (
     <motion.div
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-[100]"
+      className="pointer-events-none fixed left-0 top-0 z-[100] text-accent mix-blend-difference"
       style={{ x: sx, y: sy }}
     >
       <motion.div
-        animate={{
-          scale: hovering ? 1.5 : 1,
-          rotate: hovering ? -10 : 0,
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        style={{ translateX: "-30%", translateY: "-25%" }}
-        className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]"
+        animate={{ scale: hovering ? 2.1 : 1, rotate: hovering ? 72 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 22 }}
+        style={{ translateX: "-50%", translateY: "-50%" }}
       >
-        <PuppetHead size={38} />
+        <StarIcon size={18} filled={hovering} />
       </motion.div>
     </motion.div>
   );

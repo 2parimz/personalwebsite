@@ -13,17 +13,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { eggs } from "@/content/site";
 import { StarIcon } from "@/components/StarIcon";
 import { BananaIcon } from "@/components/art/Banana";
-import { Confetti, DiscoLights } from "@/components/eggs/Party";
 
-export type Theme = "day" | "noir" | "party";
+export type Theme = "day" | "noir";
 
 type EggState = {
   theme: Theme;
   /** Konami code — inverts the whole issue to black. */
   toggleNoir: () => void;
-  /** The switch in the corner. */
-  toggleParty: () => void;
-  /** Typing the secret word puts a fourth cassette in the tray. */
+  /** Typing the secret word puts an extra cassette in the tray. */
   secretUnlocked: boolean;
   /** Bumped by every star on the page; seven of them makes it rain. */
   registerStarClick: () => void;
@@ -61,7 +58,6 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
   const [raining, setRaining] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [slipped, setSlipped] = useState(false);
-  const [confettiKey, setConfettiKey] = useState(0);
 
   const starClicks = useRef(0);
   const buffer = useRef<string[]>([]);
@@ -76,19 +72,6 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
   const toggleNoir = useCallback(() => {
     setTheme((current) => (current === "noir" ? "day" : "noir"));
   }, []);
-
-  const toggleParty = useCallback(() => {
-    setTheme((current) => {
-      const next = current === "party" ? "day" : "party";
-      if (next === "party") {
-        setConfettiKey((k) => k + 1);
-        say(eggs.party.on);
-      } else {
-        say(eggs.party.off);
-      }
-      return next;
-    });
-  }, [say]);
 
   const slip = useCallback(() => setSlipped(true), []);
 
@@ -150,15 +133,13 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ theme, toggleNoir, toggleParty, secretUnlocked, registerStarClick, slip, say }),
-    [theme, toggleNoir, toggleParty, secretUnlocked, registerStarClick, slip, say]
+    () => ({ theme, toggleNoir, secretUnlocked, registerStarClick, slip, say }),
+    [theme, toggleNoir, secretUnlocked, registerStarClick, slip, say]
   );
 
   return (
     <EggContext.Provider value={value}>
-      <DiscoLights active={theme === "party"} />
-      <div className="relative z-10">{children}</div>
-      <Confetti fireKey={confettiKey} />
+      {children}
       <StarShower active={raining} />
       <SlipModal open={slipped} onClose={() => setSlipped(false)} />
       <Toast message={message} />

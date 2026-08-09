@@ -111,9 +111,16 @@ export const music = {
       color: "#4f7d52",
       track: { title: "Recorded off the radio", artist: "Various", src: null },
     },
+    {
+      id: "soundtrack",
+      label: "SOUND TRACK No. 2",
+      sublabel: "INDEX · COMPACT CASSETTE · 90",
+      color: "#e0a25e",
+      track: { title: "For the drive home", artist: "Somebody's score", src: null },
+    },
   ] as Cassette[],
 
-  /** Unlocked by typing the secret word. A fourth tape appears in the tray. */
+  /** Unlocked by typing the secret word. A fifth tape appears in the tray. */
   secretCassette: {
     id: "secret",
     label: "DO NOT PLAY",
@@ -210,7 +217,7 @@ export const eggs = {
   /** Type these letters anywhere on the page to unlock the fourth cassette. */
   secretWord: "muse",
   konami: "DIRECTOR'S CUT UNLOCKED — the issue goes to press in black.",
-  secretTrackFound: "A fourth tape just turned up in the tray.",
+  secretTrackFound: "An unlabelled tape just turned up in the tray.",
   starShower: "★ Seven stars. Somebody's clicking.",
   endOfIssue: "You reached the end of the issue. There isn't more. Go outside.",
 
@@ -219,11 +226,5 @@ export const eggs = {
     title: "Whoops!",
     body: "You slipped on the banana! You owe Parima a coffee.",
     button: "I'll pay up",
-  },
-
-  /** The little switch in the corner. */
-  party: {
-    on: "You found Parima's alter ego!",
-    off: "Back to the quiet issue.",
   },
 };

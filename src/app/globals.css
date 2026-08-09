@@ -26,26 +26,6 @@
   --grain-opacity: 0.09;
 }
 
-/* Alter ego. Flipped by the switch in the corner. */
-[data-theme="party"] {
-  --bg: #0a0410;
-  --paper: #170b23;
-  --fg: #f6f0ff;
-  --accent: #ff2e88;
-  --olive: #22e6c8;
-  --rule: rgb(255 46 136 / 0.35);
-  --grain-opacity: 0.14;
-}
-
-/* Neon is scoped to the big headlines only — anything sitting on its own
-   paper (cassette labels, polaroids) keeps its real colours. */
-[data-theme="party"] .display {
-  color: #ffffff;
-  text-shadow:
-    0 0 6px var(--accent),
-    0 0 22px var(--accent),
-    0 0 48px rgb(123 92 255 / 0.7);
-}
 
 @theme inline {
   --color-bg: var(--bg);
@@ -182,12 +162,6 @@ html.lenis body {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-/* The puppet stands in for the pointer, so hide the real one. */
-html.has-puppet,
-html.has-puppet * {
-  cursor: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
