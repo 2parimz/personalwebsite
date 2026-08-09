@@ -6,6 +6,8 @@ import { site, about } from "@/content/site";
 import { Frame } from "@/components/Frame";
 import { StarButton } from "@/components/Star";
 import { TrouserPlate } from "@/components/LineArt";
+import { HeartEyes } from "@/components/art/HeartEyes";
+import { BananaSpot } from "@/components/eggs/BananaSpot";
 import { EASE } from "@/components/Reveal";
 
 export function Hero() {
@@ -105,8 +107,21 @@ export function Hero() {
             <span className="kicker text-fg/50">Plate 01</span>
             <StarButton size={14} label="Star the plate" />
           </div>
+
+          {/* The heart, stuck on like a sticker */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6, rotate: -18 }}
+            animate={{ opacity: 1, scale: 1, rotate: -9 }}
+            transition={{ duration: 0.8, delay: 0.8, ease: EASE }}
+            className="mt-6 flex justify-center lg:-mt-4 lg:justify-start"
+          >
+            <HeartEyes size={104} />
+          </motion.div>
         </motion.div>
       </div>
+
+      {/* Banana #1 */}
+      <BananaSpot className="bottom-[16%] right-[12%]" size={32} rotate={-12} />
 
       {/* Scattered pins */}
       <div className="pointer-events-none absolute inset-0 hidden lg:block">

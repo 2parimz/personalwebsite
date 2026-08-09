@@ -12,15 +12,23 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { eggs } from "@/content/site";
 import { StarIcon } from "@/components/StarIcon";
+import { BananaIcon } from "@/components/art/Banana";
+import { Confetti, DiscoLights } from "@/components/eggs/Party";
+
+export type Theme = "day" | "noir" | "party";
 
 type EggState = {
+  theme: Theme;
   /** Konami code — inverts the whole issue to black. */
-  noir: boolean;
   toggleNoir: () => void;
-  /** Typing the secret word reveals a hidden track in the player. */
+  /** The switch in the corner. */
+  toggleParty: () => void;
+  /** Typing the secret word puts a fourth cassette in the tray. */
   secretUnlocked: boolean;
   /** Bumped by every star on the page; seven of them makes it rain. */
   registerStarClick: () => void;
+  /** Fired by the hidden bananas. */
+  slip: () => void;
   say: (message: string) => void;
 };
 
@@ -48,10 +56,12 @@ const KONAMI = [
 const STAR_GOAL = 7;
 
 export function EasterEggs({ children }: { children: React.ReactNode }) {
-  const [noir, setNoir] = useState(false);
+  const [theme, setTheme] = useState<Theme>("day");
   const [secretUnlocked, setSecretUnlocked] = useState(false);
   const [raining, setRaining] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [slipped, setSlipped] = useState(false);
+  const [confettiKey, setConfettiKey] = useState(0);
 
   const starClicks = useRef(0);
   const buffer = useRef<string[]>([]);
@@ -63,7 +73,24 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
     messageTimer.current = setTimeout(() => setMessage(null), 4200);
   }, []);
 
-  const toggleNoir = useCallback(() => setNoir((v) => !v), []);
+  const toggleNoir = useCallback(() => {
+    setTheme((current) => (current === "noir" ? "day" : "noir"));
+  }, []);
+
+  const toggleParty = useCallback(() => {
+    setTheme((current) => {
+      const next = current === "party" ? "day" : "party";
+      if (next === "party") {
+        setConfettiKey((k) => k + 1);
+        say(eggs.party.on);
+      } else {
+        say(eggs.party.off);
+      }
+      return next;
+    });
+  }, [say]);
+
+  const slip = useCallback(() => setSlipped(true), []);
 
   const registerStarClick = useCallback(() => {
     starClicks.current += 1;
@@ -77,8 +104,8 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
 
   // Paint the theme onto <html> so CSS variables cascade to everything.
   useEffect(() => {
-    document.documentElement.dataset.theme = noir ? "noir" : "day";
-  }, [noir]);
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   // One listener watches for both the Konami code and the secret word.
   useEffect(() => {
@@ -98,7 +125,7 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
 
       const konamiTail = recent.slice(-KONAMI.length);
       if (konamiTail.length === KONAMI.length && konamiTail.every((k, i) => k === KONAMI[i])) {
-        setNoir((v) => !v);
+        toggleNoir();
         say(eggs.konami);
         buffer.current = [];
         return;
@@ -114,7 +141,7 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [say, secretUnlocked]);
+  }, [say, secretUnlocked, toggleNoir]);
 
   useEffect(() => {
     return () => {
@@ -123,14 +150,17 @@ export function EasterEggs({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ noir, toggleNoir, secretUnlocked, registerStarClick, say }),
-    [noir, toggleNoir, secretUnlocked, registerStarClick, say]
+    () => ({ theme, toggleNoir, toggleParty, secretUnlocked, registerStarClick, slip, say }),
+    [theme, toggleNoir, toggleParty, secretUnlocked, registerStarClick, slip, say]
   );
 
   return (
     <EggContext.Provider value={value}>
-      {children}
+      <DiscoLights active={theme === "party"} />
+      <div className="relative z-10">{children}</div>
+      <Confetti fireKey={confettiKey} />
       <StarShower active={raining} />
+      <SlipModal open={slipped} onClose={() => setSlipped(false)} />
       <Toast message={message} />
     </EggContext.Provider>
   );
@@ -172,6 +202,64 @@ function StarShower({ active }: { active: boolean }) {
             </motion.div>
           ))}
         </div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function SlipModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-label={eggs.banana.title}
+          className="fixed inset-0 z-[96] flex items-center justify-center p-5"
+        >
+          <div className="absolute inset-0 bg-fg/70 backdrop-blur-sm" />
+
+          <motion.div
+            onClick={(event) => event.stopPropagation()}
+            initial={{ scale: 0.8, rotate: -8, y: 30 }}
+            animate={{ scale: 1, rotate: 0, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 18 }}
+            className="relative w-full max-w-sm border border-fg bg-paper p-8 text-center"
+          >
+            <motion.div
+              animate={{ rotate: [0, -14, 12, -6, 0] }}
+              transition={{ duration: 1.1, ease: "easeInOut" }}
+              className="mx-auto w-fit"
+            >
+              <BananaIcon size={72} />
+            </motion.div>
+
+            <h3 className="display mt-5 text-5xl">{eggs.banana.title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-fg/75">{eggs.banana.body}</p>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="kicker mt-7 border border-fg px-5 py-3 transition-colors hover:bg-fg hover:text-bg"
+            >
+              {eggs.banana.button}
+            </button>
+          </motion.div>
+        </motion.div>
       )}
     </AnimatePresence>
   );

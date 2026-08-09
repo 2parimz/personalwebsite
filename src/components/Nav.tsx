@@ -13,7 +13,7 @@ export function Nav() {
   const [solid, setSolid] = useState(false);
   const previous = useRef(0);
 
-  const { say, noir } = useEggs();
+  const { say, theme } = useEggs();
   const nameClicks = useRef<number[]>([]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -66,7 +66,11 @@ export function Nav() {
         </div>
 
         <span className="kicker hidden text-fg/40 sm:block">
-          {noir ? "Director's cut" : site.location}
+          {theme === "noir"
+            ? "Director's cut"
+            : theme === "party"
+              ? "Alter ego"
+              : site.location}
         </span>
       </nav>
     </motion.header>

@@ -5,13 +5,17 @@ import { restaurants } from "@/content/site";
 import { SectionHeading } from "@/components/SectionHeading";
 import { RevealGroup, revealChild } from "@/components/Reveal";
 import { StarIcon } from "@/components/Star";
+import { BananaSpot } from "@/components/eggs/BananaSpot";
 
 export function Restaurants() {
   return (
     <section
       id="restaurants"
-      className="mx-auto max-w-[1400px] scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32"
+      className="relative mx-auto max-w-[1400px] scroll-mt-24 px-5 py-24 sm:px-8 sm:py-32"
     >
+      {/* Banana #3 */}
+      <BananaSpot className="bottom-[8%] left-[3%]" size={26} rotate={38} />
+
       <SectionHeading
         index="04 / The table"
         title="Where I eat"

@@ -3,7 +3,7 @@
  * Edit here, nowhere else — no CMS, no backend.
  *
  * Photos: drop files in /public/photos and reference them as "/photos/name.jpg".
- * Any item with `src: null` renders as a styled placeholder frame instead,
+ * Any item with `src: null` renders a styled placeholder frame instead,
  * so the layout never breaks while you're still gathering images.
  */
 
@@ -26,16 +26,14 @@ export const site = {
 
   nav: [
     { label: "About", href: "#about" },
-    { label: "Sound", href: "#music" },
-    { label: "Obsessions", href: "#obsessions" },
+    { label: "Studio", href: "#studio" },
     { label: "Table", href: "#restaurants" },
-    { label: "Elsewhere", href: "#trip" },
+    { label: "Reel", href: "#reel" },
   ],
 
   socials: [
-    { label: "Instagram", href: "https://instagram.com/" },
-    { label: "Email", href: "mailto:hello@example.com" },
-    { label: "Read.cv", href: "https://read.cv/" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/your-handle" },
+    { label: "Email", href: "mailto:pshel25@gmail.com" },
   ],
 } as const;
 
@@ -55,7 +53,7 @@ export const about = {
     alt: "Portrait",
     caption: "Somewhere, this year",
   } as Photo,
-  /** Hidden until you flip the portrait over. Easter egg #4. */
+  /** Hidden until you flip the portrait over. */
   portraitBackNote:
     "shot on a disposable i forgot to develop for eleven months. hi, you found the back of the photo.",
   facts: [
@@ -71,26 +69,58 @@ export const about = {
 export type Track = {
   title: string;
   artist: string;
-  /** Local file in /public, e.g. "/audio/track.mp3". Null = link-only row. */
+  /** Local file in /public/audio, e.g. "/audio/track.mp3". Null = nothing to play yet. */
   src: string | null;
-  href?: string;
+};
+
+export type Cassette = {
+  id: string;
+  /** Handwritten label on the tape. */
+  label: string;
+  /** Small print under the label. */
+  sublabel: string;
+  /** Shell colour — pick anything, these match the reference tapes. */
+  color: string;
+  track: Track;
 };
 
 export const music = {
   /**
-   * Optional Spotify embed. Grab it from Share → Embed playlist and paste
-   * only the src URL. Set to null to hide the embed entirely.
+   * Three tapes in the tray. Drag one into the boombox (or just click it),
+   * then hit play. Nothing plays until a tape is loaded.
    */
-  spotifyEmbedUrl: null as string | null,
-  // e.g. "https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?theme=0"
+  cassettes: [
+    {
+      id: "rock",
+      label: "'80s ROCK",
+      sublabel: "SONY · LOW-NOISE · 90",
+      color: "#d8d2c2",
+      track: { title: "Side A, track one", artist: "Something loud", src: null },
+    },
+    {
+      id: "miracle",
+      label: "MIRACLE LOVE",
+      sublabel: "INFONICS · 4 CHANNEL · 60",
+      color: "#f2c3d1",
+      track: { title: "The pink tape", artist: "Something soft", src: null },
+    },
+    {
+      id: "holiday",
+      label: "HOLIDAY MIXTAPE",
+      sublabel: "SANYO · C-60LN · CHROME",
+      color: "#4f7d52",
+      track: { title: "Recorded off the radio", artist: "Various", src: null },
+    },
+  ] as Cassette[],
 
-  nowPlaying: [
-    { title: "Track one", artist: "Artist name", src: null, href: "#" },
-    { title: "Track two", artist: "Artist name", src: null, href: "#" },
-    { title: "Track three", artist: "Artist name", src: null, href: "#" },
-    { title: "Track four", artist: "Artist name", src: null, href: "#" },
-    { title: "Track five", artist: "Artist name", src: null, href: "#" },
-  ] as Track[],
+  /** Unlocked by typing the secret word. A fourth tape appears in the tray. */
+  secretCassette: {
+    id: "secret",
+    label: "DO NOT PLAY",
+    sublabel: "UNLABELLED · FOUND IN A DRAWER",
+    color: "#d4af37",
+    track: { title: "The one I don't tell people about", artist: "—", src: null },
+  } as Cassette,
 
   /** Scrolling ticker of artists. */
   onRepeat: [
@@ -103,28 +133,27 @@ export const music = {
     "Solange",
     "Arthur Russell",
   ],
-
-  /** Easter egg #2 — appears only once you type the secret word. */
-  secretTrack: {
-    title: "The one I don't tell people about",
-    artist: "—",
-    src: null,
-    href: "#",
-  } as Track,
 };
 
 /* ------------------------------ Summer list ------------------------------- */
 
+export type Obsession = {
+  title: string;
+  note: string;
+  /** "/photos/name.jpg" — or null for a tonal placeholder. */
+  image: string | null;
+};
+
 export const obsessions = {
-  intro: "The running list. Updated whenever something displaces something else.",
+  intro: "The running list, pinned to the wall. Drag them around if you like.",
   items: [
-    { title: "A thing", note: "Why it has taken over your life this summer." },
-    { title: "Another thing", note: "One dry, specific line. No adjectives you'd find in an ad." },
-    { title: "A show", note: "The episode you have rewatched." },
-    { title: "A garment", note: "Bought secondhand, worn to death." },
-    { title: "A snack", note: "Indefensible. Non-negotiable." },
-    { title: "A book", note: "Still on page 40. Counts anyway." },
-  ],
+    { title: "A thing", note: "Why it has taken over your life this summer.", image: null },
+    { title: "Another thing", note: "One dry, specific line. No ad adjectives.", image: null },
+    { title: "A show", note: "The episode you have rewatched.", image: null },
+    { title: "A garment", note: "Bought secondhand, worn to death.", image: null },
+    { title: "A snack", note: "Indefensible. Non-negotiable.", image: null },
+    { title: "A book", note: "Still on page 40. Counts anyway.", image: null },
+  ] as Obsession[],
 };
 
 /* ------------------------------- Restaurants ------------------------------ */
@@ -141,34 +170,60 @@ export const restaurants = {
   ],
 };
 
-/* ---------------------------------- Trip ---------------------------------- */
+/* ------------------------------ Reel & travel ----------------------------- */
 
-export const trip = {
-  title: "Elsewhere",
+export const reel = {
   place: "Somewhere",
   dates: "June 2026",
   blurb:
     "A line or two about the trip — what you went for and what you actually came back with.",
+
+  /** Frames on the film strip. Add or remove freely. */
   photos: [
-    { src: null, alt: "Trip photo 1", caption: "Morning, day one", ratio: "portrait" },
-    { src: null, alt: "Trip photo 2", caption: "The good coffee", ratio: "landscape" },
-    { src: null, alt: "Trip photo 3", caption: "Got lost here", ratio: "square" },
-    { src: null, alt: "Trip photo 4", caption: "Worth the walk", ratio: "portrait" },
-    { src: null, alt: "Trip photo 5", caption: "Last night", ratio: "landscape" },
-    { src: null, alt: "Trip photo 6", caption: "The window", ratio: "square" },
-    { src: null, alt: "Trip photo 7", caption: "Unplanned", ratio: "portrait" },
-    { src: null, alt: "Trip photo 8", caption: "Going back", ratio: "landscape" },
+    { src: null, alt: "Frame 1", caption: "Morning, day one" },
+    { src: null, alt: "Frame 2", caption: "The good coffee" },
+    { src: null, alt: "Frame 3", caption: "Got lost here" },
+    { src: null, alt: "Frame 4", caption: "Worth the walk" },
+    { src: null, alt: "Frame 5", caption: "Last night" },
+    { src: null, alt: "Frame 6", caption: "The window" },
+    { src: null, alt: "Frame 7", caption: "Unplanned" },
+    { src: null, alt: "Frame 8", caption: "Going back" },
   ] as Photo[],
+
+  /**
+   * The camcorder screen. Two ways to fill it:
+   *   1. Drop an .mp4 in /public/video and set `src: "/video/clip.mp4"`
+   *   2. Or paste a YouTube video ID (the bit after "watch?v=")
+   * Leave both null and it shows a standby screen.
+   */
+  video: {
+    src: null as string | null,
+    youtubeId: null as string | null,
+    poster: null as string | null,
+    caption: "Handheld, unedited",
+  },
 };
 
 /* ------------------------------- Easter eggs ------------------------------ */
 
 export const eggs = {
-  /** Type these letters anywhere on the page to unlock the secret track. */
+  /** Type these letters anywhere on the page to unlock the fourth cassette. */
   secretWord: "muse",
-  /** Messages shown when each egg fires. */
   konami: "DIRECTOR'S CUT UNLOCKED — the issue goes to press in black.",
-  secretTrackFound: "You typed the word. One more track just appeared.",
+  secretTrackFound: "A fourth tape just turned up in the tray.",
   starShower: "★ Seven stars. Somebody's clicking.",
   endOfIssue: "You reached the end of the issue. There isn't more. Go outside.",
+
+  /** Banana. Three of them, hidden at different depths. */
+  banana: {
+    title: "Whoops!",
+    body: "You slipped on the banana! You owe Parima a coffee.",
+    button: "I'll pay up",
+  },
+
+  /** The little switch in the corner. */
+  party: {
+    on: "You found Parima's alter ego!",
+    off: "Back to the quiet issue.",
+  },
 };
