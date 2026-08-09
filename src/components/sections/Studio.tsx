@@ -150,7 +150,9 @@ export function Studio() {
         {/* --- The wall --- */}
         <div className="col-span-12 lg:col-span-7">
           <Reveal>
-            <p className="kicker mb-6 text-fg/45">{obsessions.intro}</p>
+            {/* Extra clearance: the polaroid pins sit 12px above their cards
+                and would otherwise collide with this line. */}
+            <p className="kicker mb-10 text-fg/45">{obsessions.intro}</p>
           </Reveal>
           <ObsessionBoard items={obsessions.items} />
         </div>
