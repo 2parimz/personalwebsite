@@ -60,12 +60,14 @@ export function Hero() {
 
           <h1 className="display mt-6 text-[clamp(3.6rem,13vw,10rem)]">
             {/* The mask needs headroom below the baseline or descenders (the
-                g in "girl") get cropped by overflow-hidden. The negative
-                margin hands the padding back so the leading stays tight. */}
+                g in "girl") get cropped by overflow-hidden. Measured against
+                Bodoni Moda at 0.84 leading, the ink runs ~0.20em past the
+                line box, so 0.30em clears it; the negative margin hands the
+                space straight back so the leading is unchanged. */}
             {words.map((word, i) => (
               <span
                 key={word + i}
-                className="block overflow-hidden pb-[0.16em] [margin-bottom:-0.16em]"
+                className="block overflow-hidden pb-[0.3em] [margin-bottom:-0.3em]"
               >
                 <motion.span
                   initial={{ y: "150%" }}

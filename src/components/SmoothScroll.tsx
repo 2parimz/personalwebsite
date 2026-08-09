@@ -41,7 +41,7 @@ export function SmoothScroll() {
       event.preventDefault();
       // Land the section heading just clear of the fixed nav rather than
       // parking its whole top padding on screen.
-      lenis.scrollTo(target as HTMLElement, { offset: -20 });
+      lenis.scrollTo(target as HTMLElement, { offset: -12 });
       history.replaceState(null, "", href);
     }
 
