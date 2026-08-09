@@ -8,7 +8,7 @@ import { Camcorder } from "@/components/Camcorder";
 
 export function Reel() {
   return (
-    <section id="reel" className="relative scroll-mt-16 pb-24 pt-12 sm:pb-32 sm:pt-16">
+    <section id="reel" className="relative pb-24 pt-12 sm:pb-32 sm:pt-16">
       <div className="mx-auto max-w-[1400px] px-5 sm:px-8">
         <SectionHeading
           index="05 / Elsewhere"

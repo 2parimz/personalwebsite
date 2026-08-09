@@ -11,7 +11,7 @@ export function About() {
   return (
     <section
       id="about"
-      className="mx-auto max-w-[1400px] scroll-mt-16 px-5 pb-24 pt-12 sm:px-8 sm:pb-32 sm:pt-16"
+      className="mx-auto max-w-[1400px] px-5 pb-24 pt-12 sm:px-8 sm:pb-32 sm:pt-16"
     >
       <SectionHeading
         index="01 / About"

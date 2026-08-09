@@ -39,9 +39,11 @@ export function SmoothScroll() {
       if (!target) return;
 
       event.preventDefault();
-      // Land the section heading just clear of the fixed nav rather than
-      // parking its whole top padding on screen.
-      lenis.scrollTo(target as HTMLElement, { offset: -12 });
+      // Lenis honours the target's scroll-margin-top and *adds* this offset
+      // on top of it, so the sections deliberately carry no scroll-margin —
+      // otherwise the two stack and the heading lands a long way down the
+      // page. This is the single knob for where a nav jump lands.
+      lenis.scrollTo(target as HTMLElement, { offset: -20 });
       history.replaceState(null, "", href);
     }
 
