@@ -211,6 +211,36 @@ export const reel = {
   },
 };
 
+/* --------------------------- Illustrated intro ---------------------------- */
+
+export const intro = {
+  enabled: true,
+  /** Show once per browser session. Set false to show on every single load. */
+  showOncePerSession: true,
+
+  /** Two lines. Warm, dry, self-assured — never "Welcome to my website!". */
+  greeting: ["Oh — you found me.", "Come in."],
+  /**
+   * Alternatives in the same register, if you'd rather:
+   *   ["You're early.", "I like that."]
+   *   ["Give me a second —", "actually, no. Come in."]
+   *   ["Door's open.", "Mind the books."]
+   */
+
+  /** Label under the arrow. */
+  cue: "Come in",
+
+  /**
+   * The figure. Swap these for your own colouring — they are the only
+   * things about her that are not fixed linework.
+   */
+  character: {
+    hair: "#241d19",
+    skin: "#d8a982",
+    top: "#1c1a17",
+  },
+};
+
 /* ------------------------------- Easter eggs ------------------------------ */
 
 export const eggs = {

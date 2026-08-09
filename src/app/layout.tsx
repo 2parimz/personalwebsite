@@ -8,6 +8,7 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
 import { Nav } from "@/components/Nav";
 import { ReadingProgress } from "@/components/ReadingProgress";
+import { Intro } from "@/components/intro/Intro";
 
 /** High-contrast Didone for headlines — the fashion-masthead voice. */
 const display = Bodoni_Moda({
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReadingProgress />
           <Nav />
           <main>{children}</main>
+          <Intro />
         </EasterEggs>
       </body>
     </html>
