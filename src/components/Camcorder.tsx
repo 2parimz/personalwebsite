@@ -46,16 +46,16 @@ export function Camcorder() {
               <stop offset="45%" stopColor="#201d1c" />
               <stop offset="100%" stopColor="#100f0e" />
             </linearGradient>
-            <linearGradient id="cc-chrome" x1="0" y1="0" x2="1" y2="0.2">
-              <stop offset="0%" stopColor="#b9b3aa" />
-              <stop offset="30%" stopColor="#6d675f" />
-              <stop offset="58%" stopColor="#d3cdc4" />
-              <stop offset="100%" stopColor="#4e4942" />
+            <linearGradient id="cc-hinge" x1="0" y1="0" x2="1" y2="0.2">
+              <stop offset="0%" stopColor="#6f6960" />
+              <stop offset="42%" stopColor="#2b2724" />
+              <stop offset="76%" stopColor="#837c73" />
+              <stop offset="100%" stopColor="#1e1b19" />
             </linearGradient>
-            <linearGradient id="cc-bodystub" x1="0" y1="0" x2="0.3" y2="1">
-              <stop offset="0%" stopColor="#c3bdb3" />
-              <stop offset="55%" stopColor="#8b857c" />
-              <stop offset="100%" stopColor="#4a453f" />
+            <linearGradient id="cc-body" x1="0" y1="0" x2="0.4" y2="1">
+              <stop offset="0%" stopColor="#4a443e" />
+              <stop offset="45%" stopColor="#262220" />
+              <stop offset="100%" stopColor="#111010" />
             </linearGradient>
             <linearGradient id="cc-key" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#403b38" />
@@ -69,46 +69,46 @@ export function Camcorder() {
           {/* ground shadow */}
           <ellipse
             cx="470"
-            cy="586"
-            rx="400"
-            ry="22"
+            cy="580"
+            rx="392"
+            ry="26"
             fill="#14110f"
-            opacity="0.2"
+            opacity="0.3"
             filter="url(#cc-shadow)"
           />
 
-          {/* ---- camera body, suggested at the right edge ---- */}
+          {/* ---- the camera body, mostly out of frame behind the panel.
+                  Dark and cropped by the right edge, like the reference:
+                  the panel is the subject, this is just enough to say
+                  there's a camera attached. ---- */}
           <g>
-            <rect x="884" y="112" width="150" height="392" rx="30" fill="url(#cc-bodystub)" />
-            {/* vent slots */}
-            <g fill="#4a453f" opacity="0.75">
-              <rect x="946" y="164" width="66" height="7" rx="3.5" />
-              <rect x="946" y="182" width="66" height="7" rx="3.5" />
-              <rect x="946" y="200" width="66" height="7" rx="3.5" />
-            </g>
-            {/* body keys */}
-            <rect x="946" y="256" width="30" height="30" rx="7" fill="#3f3a35" />
-            <rect x="988" y="256" width="30" height="30" rx="7" fill="#3f3a35" />
-            <rect x="946" y="300" width="72" height="22" rx="11" fill="#3f3a35" />
-            <circle cx="962" cy="366" r="13" fill="#b8342a" />
-            {/* soft edge highlight */}
             <path
-              d="M900 130 Q892 310 900 486"
-              fill="none"
-              stroke="#e6e0d6"
-              strokeOpacity="0.4"
+              d="M868 156 Q868 136 890 133 L1000 120 L1000 498 L890 485 Q868 482 868 462 Z"
+              fill="url(#cc-body)"
+            />
+            {/* top edge catching light */}
+            <path
+              d="M884 143 L1000 130"
+              stroke="#8d857c"
+              strokeOpacity="0.5"
               strokeWidth="3"
               strokeLinecap="round"
             />
+            {/* shell seam */}
+            <path d="M934 138 L934 482" stroke="#0a0908" strokeOpacity="0.55" strokeWidth="2" />
+            {/* strap lug and a standby lamp */}
+            <rect x="952" y="298" width="48" height="18" rx="9" fill="#0d0c0b" opacity="0.75" />
+            <circle cx="962" cy="200" r="6" fill="#c8382c" />
           </g>
 
-          {/* ---- hinge ---- */}
-          <rect x="856" y="176" width="34" height="268" rx="17" fill="url(#cc-chrome)" />
+          {/* ---- hinge knuckles ---- */}
+          <rect x="850" y="182" width="26" height="88" rx="13" fill="url(#cc-hinge)" />
+          <rect x="850" y="350" width="26" height="88" rx="13" fill="url(#cc-hinge)" />
           <path
-            d="M866 194 v232 M880 194 v232"
-            stroke="#26231f"
-            strokeOpacity="0.45"
-            strokeWidth="2"
+            d="M863 196 v60 M863 364 v60"
+            stroke="#0d0c0b"
+            strokeOpacity="0.5"
+            strokeWidth="1.5"
             strokeLinecap="round"
           />
 
