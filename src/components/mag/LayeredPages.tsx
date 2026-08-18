@@ -30,6 +30,8 @@ export const LAYER = {
   /** Wheel delta needed to commit to a turn, and the cooldown after one. */
   wheelThreshold: 60,
   wheelLockMs: 620,
+  /** Quiet time after a free drag before the deck settles onto a spread. */
+  settleAfterMs: 140,
 };
 
 /** Cubic-bezier solver, so the tween uses the real curve rather than an approximation. */
@@ -63,9 +65,11 @@ function bezier(x1: number, y1: number, x2: number, y2: number) {
  * stays put while the following page slides across and buries it. The page
  * underneath never moves; the one on top does all the travelling.
  *
- * The stacking itself is CSS (sticky + scroll-snap), which keeps it on the
- * compositor. Only the depth cue and the stagger are scripted, and the depth
- * cue runs on motion values so it never re-renders React per frame.
+ * The stacking itself is CSS (position: sticky), which keeps it on the
+ * compositor. Landing on a spread is a scripted tween rather than CSS
+ * scroll-snap — snap and sticky disagree about where a snap area sits, and
+ * a tween also lets the easing be exactly the curve we want. The depth cue
+ * runs on motion values so React never re-renders per frame.
  */
 export function LayeredPages({ children }: { children: ReactNode }) {
   const pages = Children.toArray(children);
@@ -81,11 +85,23 @@ export function LayeredPages({ children }: { children: ReactNode }) {
   const indexRef = useRef(0);
   const scrollRaf = useRef(0);
   const tweenRaf = useRef(0);
+  const animatingRef = useRef(false);
+  const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** goTo, held in a ref so the scroll listener can settle without
+      re-subscribing every time the callback identity changes. */
+  const settleRef = useRef<((i: number) => void) | null>(null);
   const ease = useMemo(() => bezier(...LAYER.ease), []);
 
   useEffect(() => {
     indexRef.current = index;
   }, [index]);
+
+  /* Always open on the cover. Mandatory CSS snap used to pick its own target
+     here and land the reader several spreads in. */
+  useEffect(() => {
+    const el = scroller.current;
+    if (el) el.scrollLeft = 0;
+  }, []);
 
   /* Track native scrolling (touch drag) and keep `progress` current. */
   useEffect(() => {
@@ -103,11 +119,24 @@ export function LayeredPages({ children }: { children: ReactNode }) {
         const nearest = Math.round(p);
         if (nearest !== indexRef.current) setIndex(nearest);
       });
+
+      // Settle after a free drag. Done here rather than with CSS snap:
+      // mandatory snap and sticky layers disagree about where a snap area
+      // is, and it would drag the reader to the wrong spread on load.
+      if (animatingRef.current) return;
+      if (settleTimer.current) clearTimeout(settleTimer.current);
+      settleTimer.current = setTimeout(() => {
+        if (animatingRef.current) return;
+        const w = el.clientWidth || 1;
+        const nearest = Math.round(el.scrollLeft / w);
+        if (Math.abs(el.scrollLeft - nearest * w) > 2) settleRef.current?.(nearest);
+      }, LAYER.settleAfterMs);
     };
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       el.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(scrollRaf.current);
+      if (settleTimer.current) clearTimeout(settleTimer.current);
     };
   }, [progress]);
 
@@ -122,9 +151,7 @@ export function LayeredPages({ children }: { children: ReactNode }) {
       if (Math.abs(to - from) < 1) return;
 
       setAnimating(true);
-      // The tween owns the motion; CSS snap would fight it mid-flight.
-      const previousSnap = el.style.scrollSnapType;
-      el.style.scrollSnapType = "none";
+      animatingRef.current = true;
 
       const start = performance.now();
       cancelAnimationFrame(tweenRaf.current);
@@ -135,7 +162,7 @@ export function LayeredPages({ children }: { children: ReactNode }) {
           tweenRaf.current = requestAnimationFrame(step);
         } else {
           tweenRaf.current = 0;
-          el.style.scrollSnapType = previousSnap;
+          animatingRef.current = false;
           setIndex(clamped);
           setAnimating(false);
         }
@@ -144,6 +171,10 @@ export function LayeredPages({ children }: { children: ReactNode }) {
     },
     [total, ease]
   );
+
+  useEffect(() => {
+    settleRef.current = goTo;
+  }, [goTo]);
 
   const go = useCallback((delta: number) => goTo(indexRef.current + delta), [goTo]);
 
@@ -209,13 +240,13 @@ export function LayeredPages({ children }: { children: ReactNode }) {
 
       <div
         ref={scroller}
-        className="h-[100svh] w-full snap-x snap-mandatory touch-pan-x overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="h-[100svh] w-full touch-pan-x overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {/* No w-max: the slots are w-full, which resolves against the
             scroller, so each page is exactly one viewport wide. */}
         <div className="flex h-full">
           {pages.map((child, i) => (
-            <div key={i} className="h-full w-full shrink-0 snap-start">
+            <div key={i} className="h-full w-full shrink-0">
               <Layer index={i} current={index} progress={progress}>
                 {child}
               </Layer>
