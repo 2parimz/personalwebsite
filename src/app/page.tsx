@@ -1,19 +1,26 @@
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Studio } from "@/components/sections/Studio";
-import { Restaurants } from "@/components/sections/Restaurants";
-import { Reel } from "@/components/sections/Reel";
-import { Footer } from "@/components/sections/Footer";
+import { HorizontalPages } from "@/components/mag/HorizontalPages";
+import {
+  AboutPage,
+  ColophonPage,
+  CoverPage,
+  FeaturePage,
+  ObsessionsPage,
+  ReelPage,
+  SoundPage,
+  TablePage,
+} from "@/components/mag/pages";
 
 export default function Home() {
   return (
-    <>
-      <Hero />
-      <About />
-      <Studio />
-      <Restaurants />
-      <Reel />
-      <Footer />
-    </>
+    <HorizontalPages>
+      <CoverPage />
+      <AboutPage />
+      <SoundPage />
+      <ObsessionsPage />
+      <FeaturePage />
+      <TablePage />
+      <ReelPage />
+      <ColophonPage />
+    </HorizontalPages>
   );
 }

@@ -4,10 +4,7 @@ import "./globals.css";
 
 import { site } from "@/content/site";
 import { EasterEggs } from "@/components/eggs/EasterEggs";
-import { SmoothScroll } from "@/components/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
-import { Nav } from "@/components/Nav";
-import { ReadingProgress } from "@/components/ReadingProgress";
 
 /** High-contrast Didone for headlines — the fashion-masthead voice. */
 const display = Bodoni_Moda({
@@ -38,10 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" data-theme="day" className={`${display.variable} ${sans.variable}`}>
       <body>
         <EasterEggs>
-          <SmoothScroll />
           <CustomCursor />
-          <ReadingProgress />
-          <Nav />
           <main>{children}</main>
         </EasterEggs>
       </body>

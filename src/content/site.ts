@@ -26,8 +26,10 @@ export const site = {
 
   nav: [
     { label: "About", href: "#about" },
-    { label: "Studio", href: "#studio" },
-    { label: "Table", href: "#restaurants" },
+    { label: "Sound", href: "#sound" },
+    { label: "Obsessions", href: "#obsessions" },
+    { label: "Feature", href: "#feature" },
+    { label: "Table", href: "#table" },
     { label: "Reel", href: "#reel" },
   ],
 
@@ -129,6 +131,10 @@ export const music = {
     track: { title: "The one I don't tell people about", artist: "—", src: null },
   } as Cassette,
 
+  /** The standfirst on the sound spread. */
+  note:
+    "Four tapes, one deck. Drag a tape across and press play — nothing starts on its own. What follows is roughly what has been on in the background of everything else in this issue.",
+
   /** Scrolling ticker of artists. */
   onRepeat: [
     "Sade",
@@ -209,6 +215,25 @@ export const reel = {
     poster: null as string | null,
     caption: "Handheld, unedited",
   },
+};
+
+/* ------------------------------ Feature spread ---------------------------- */
+
+/**
+ * The full-bleed picture spread. The image gets a duotone wash so any photo
+ * you drop in reads as art-directed rather than as a snapshot.
+ */
+export const feature = {
+  kicker: "Feature",
+  title: "In colour",
+  /** "/photos/name.jpg" — or null for a treated placeholder. */
+  image: null as string | null,
+  caption: "Shot on the street, printed too pink.",
+  /** Two narrow columns, set in mono like the reference spread. */
+  columns: [
+    "Replace this with the real thing. The column is deliberately narrow and set in a monospaced face, the way picture-led magazine spreads run their captions — the picture does the talking and the text is texture around it.",
+    "A second column. Keep it short: on a spread like this anything longer than a few sentences fights the image. Say where it was taken, why you kept it, and stop.",
+  ],
 };
 
 /* ------------------------------- Easter eggs ------------------------------ */

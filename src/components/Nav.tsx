@@ -1,29 +1,31 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { site } from "@/content/site";
 import { useEggs } from "@/components/eggs/EasterEggs";
-import { EASE } from "@/components/Reveal";
+import { useScroller } from "@/components/mag/scroller";
 
+const PAGES = 8;
+
+/**
+ * The masthead bar. It stays put — on a horizontal issue there is no
+ * "scrolling down past it" — and carries a live page count instead.
+ */
 export function Nav() {
-  const { scrollY } = useScroll();
-  const [hidden, setHidden] = useState(false);
-  const [solid, setSolid] = useState(false);
-  const previous = useRef(0);
+  const container = useScroller();
+  const { scrollXProgress } = useScroll({ container: container ?? undefined, axis: "x" });
+  const [page, setPage] = useState(1);
 
   const { say, theme } = useEggs();
   const nameClicks = useRef<number[]>([]);
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setSolid(latest > 40);
-    // Get out of the way going down, come back on the way up.
-    setHidden(latest > previous.current && latest > 220);
-    previous.current = latest;
-  });
+  const spread = useTransform(scrollXProgress, (v) =>
+    Math.min(PAGES, Math.max(1, Math.round(v * (PAGES - 1)) + 1))
+  );
+  useMotionValueEvent(spread, "change", (v) => setPage(v));
 
-  /** Egg #6: three fast clicks on the masthead nudges you toward the code. */
+  /** Three fast clicks on the masthead nudges you toward the code. */
   function onNameClick() {
     const now = Date.now();
     nameClicks.current = [...nameClicks.current, now].filter((t) => now - t < 900);
@@ -34,22 +36,11 @@ export function Nav() {
   }
 
   return (
-    <motion.header
-      animate={{ y: hidden ? "-110%" : "0%" }}
-      transition={{ duration: 0.45, ease: EASE }}
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        solid ? "border-b border-rule bg-bg/85 backdrop-blur-md" : ""
-      }`}
-    >
-      <nav className="mx-auto flex max-w-[1400px] items-center justify-between gap-6 px-5 py-4 sm:px-8">
-        <button
-          type="button"
-          onClick={onNameClick}
-          className="kicker text-left leading-tight"
-          aria-label={`${site.name} — back to top`}
-        >
-          <span className="block font-display text-lg tracking-normal">{site.name}</span>
-          <span className="block text-[0.6rem] text-fg/50">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <nav className="pointer-events-auto flex items-center justify-between gap-6 border-b border-rule bg-bg/80 px-6 py-3 backdrop-blur-md sm:px-12">
+        <button type="button" onClick={onNameClick} className="kicker text-left leading-tight">
+          <span className="block font-display text-base tracking-normal">{site.name}</span>
+          <span className="block text-[0.55rem] text-fg/50">
             {site.issue} · {site.season}
           </span>
         </button>
@@ -60,15 +51,12 @@ export function Nav() {
               {item.label}
             </a>
           ))}
-          <Link href="/about" className="kicker link-underline text-fg/70 hover:text-fg">
-            Full Profile
-          </Link>
         </div>
 
-        <span className="kicker hidden text-fg/40 sm:block">
-          {theme === "noir" ? "Director's cut" : site.location}
+        <span className="kicker text-fg/45">
+          {theme === "noir" ? "Director's cut" : `${page} / ${PAGES}`}
         </span>
       </nav>
-    </motion.header>
+    </header>
   );
 }
