@@ -101,7 +101,7 @@ function OliveShape({ where }: { where: "right" | "left" | "bottom" }) {
     <svg
       viewBox="0 0 600 1000"
       preserveAspectRatio="none"
-      className={`absolute inset-y-0 h-full w-[52%] ${right ? "right-0" : "left-0"}`}
+      className={`absolute inset-y-0 h-full w-[38%] ${right ? "right-0" : "left-0"}`}
       style={right ? undefined : { transform: "scaleX(-1)" }}
     >
       <path d="M600 0 L600 1000 L180 1000 Q92 726 214 500 Q330 282 236 0 Z" fill="var(--olive-field)" />

@@ -59,7 +59,7 @@ export function CoverPage() {
 
       <div className="grid min-h-0 flex-1 grid-cols-12 items-center gap-6">
         <div className="col-span-5 hidden h-full max-h-[62vh] items-center lg:flex">
-          <Frame photo={about.portrait} priority sizes="34vw" className="w-full -rotate-2" />
+          <Frame photo={about.portrait} priority showCaption={false} sizes="34vw" className="w-full -rotate-2" />
         </div>
 
         <div className="col-span-12 lg:col-span-7">
@@ -320,7 +320,7 @@ export function ReelPage() {
     <Page id="reel" folio="10" runningHead="Elsewhere" stripe="bottom">
       <Head index="05 / Elsewhere" title={`Recently, ${reel.place}`} italicFrom={1} />
 
-      <div className="mt-5 grid min-h-0 flex-1 grid-cols-12 items-start gap-6 overflow-hidden">
+      <div className="mt-5 grid min-h-0 flex-1 grid-cols-12 items-center gap-6 overflow-hidden">
         <div className="col-span-12 min-h-0 lg:col-span-6">
           <Camcorder />
         </div>

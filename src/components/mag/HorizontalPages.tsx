@@ -42,7 +42,7 @@ export function HorizontalPages({ children }: { children: ReactNode }) {
       gestureOrientation: "both",
       duration: 1.15,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      wheelMultiplier: 1.15,
+      wheelMultiplier: 0.9,
       touchMultiplier: 1.6,
     });
 

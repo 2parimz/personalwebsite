@@ -50,7 +50,7 @@ camcorder whose flip-out screen plays whatever you put in `reel.video`.
 
 ## The easter eggs
 
-Seven of them, all client-side. Copy for each is in the `eggs` block of
+Six of them, all client-side. Copy for each is in the `eggs` block of
 `site.ts`.
 
 1. **Konami code** — `↑ ↑ ↓ ↓ ← → ← → B A` flips the issue into "director's
