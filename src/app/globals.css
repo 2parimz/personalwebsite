@@ -37,6 +37,7 @@
 
   --font-display: var(--font-display-src), "Didot", "Bodoni MT", Georgia, serif;
   --font-sans: var(--font-sans-src), ui-sans-serif, system-ui, sans-serif;
+  --font-hand: var(--font-hand-src), "Bradley Hand", cursive;
 }
 
 /* The issue scrolls sideways inside its own container, so the document
@@ -73,6 +74,13 @@ body {
 }
 
 /* ---------------- Editorial primitives ---------------- */
+
+/* Marginalia on the flat-lay spread. The only place handwriting appears. */
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  transform: rotate(-2deg);
+}
 
 /* Small caps label — the "MARZO / 2025" ticks in the moodboard. */
 .kicker {

@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 import { useEggs } from "@/components/eggs/EasterEggs";
 import { useScroller } from "@/components/mag/scroller";
 
-const PAGES = 8;
+const PAGES = 7;
 
 /**
  * The masthead bar. It stays put — on a horizontal issue there is no

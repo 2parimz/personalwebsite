@@ -5,7 +5,6 @@ import {
   CoverPage,
   FeaturePage,
   ObsessionsPage,
-  ReelPage,
   SoundPage,
   TablePage,
 } from "@/components/mag/pages";
@@ -19,7 +18,6 @@ export default function Home() {
       <ObsessionsPage />
       <FeaturePage />
       <TablePage />
-      <ReelPage />
       <ColophonPage />
     </HorizontalPages>
   );

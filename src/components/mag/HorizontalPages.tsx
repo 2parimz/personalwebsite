@@ -76,11 +76,16 @@ export function HorizontalPages({ children }: { children: ReactNode }) {
     <ScrollerContext.Provider value={wrapper}>
       <ReadingProgress />
       <Nav />
+      {/* w-full, never w-screen: 100vw counts the scrollbar gutter, which
+          made every page overshoot and let the next one peek in. */}
       <div
         ref={wrapper}
-        className="h-[100svh] w-screen overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="h-[100svh] w-full overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <div ref={content} className="flex h-full w-max [perspective:2200px]">
+        {/* The track is NOT w-max: each page is w-full, which resolves
+            against the wrapper, so pages line up with the viewport exactly
+            and none of the next spread peeks in. */}
+        <div ref={content} className="flex h-full">
           {children}
         </div>
       </div>

@@ -30,7 +30,6 @@ export const site = {
     { label: "Obsessions", href: "#obsessions" },
     { label: "Feature", href: "#feature" },
     { label: "Table", href: "#table" },
-    { label: "Reel", href: "#reel" },
   ],
 
   socials: [
@@ -64,6 +63,14 @@ export const about = {
     { label: "Drinks", value: "Iced oat latte, no sugar" },
     { label: "Cannot", value: "Whistle" },
   ],
+
+  /** The picture block on the About spread. Four of your own images. */
+  gallery: [
+    { src: null, alt: "Picture one", caption: "", ratio: "landscape" },
+    { src: null, alt: "Picture two", caption: "", ratio: "portrait" },
+    { src: null, alt: "Picture three", caption: "", ratio: "portrait" },
+    { src: null, alt: "Picture four", caption: "", ratio: "landscape" },
+  ] as Photo[],
 };
 
 /* ---------------------------------- Music --------------------------------- */
@@ -135,37 +142,36 @@ export const music = {
   note:
     "Four tapes, one deck. Drag a tape across and press play — nothing starts on its own. What follows is roughly what has been on in the background of everything else in this issue.",
 
-  /** Scrolling ticker of artists. */
-  onRepeat: [
-    "Sade",
-    "Frank Ocean",
-    "Nina Simone",
-    "Jai Paul",
-    "Little Simz",
-    "Cocteau Twins",
-    "Solange",
-    "Arthur Russell",
-  ],
 };
 
 /* ------------------------------ Summer list ------------------------------- */
 
 export type Obsession = {
+  /** Printed label under the object. */
   title: string;
+  /** The handwritten annotation beside it. Keep it scrappy and short. */
   note: string;
-  /** "/photos/name.jpg" — or null for a tonal placeholder. */
+  /** "/photos/name.jpg" — a cut-out on transparent PNG works best. */
   image: string | null;
+  /** Where it sits on the table, as % of the spread. Drag moves it live. */
+  x: number;
+  y: number;
+  /** Relative size, 1 = default. */
+  size?: number;
 };
 
 export const obsessions = {
-  intro: "The running list, pinned to the wall. Drag them around if you like.",
+  title: "What's in my bag?",
+  intro: "Everything I am actually carrying this summer. Drag it around.",
   items: [
-    { title: "A thing", note: "Why it has taken over your life this summer.", image: null },
-    { title: "Another thing", note: "One dry, specific line. No ad adjectives.", image: null },
-    { title: "A show", note: "The episode you have rewatched.", image: null },
-    { title: "A garment", note: "Bought secondhand, worn to death.", image: null },
-    { title: "A snack", note: "Indefensible. Non-negotiable.", image: null },
-    { title: "A book", note: "Still on page 40. Counts anyway.", image: null },
+    { title: "the bag", note: "thrifted, 2023 — brand unknown", image: null, x: 6, y: 20, size: 1.7 },
+    { title: "sunglasses", note: "3rd pair this year ↗", image: null, x: 74, y: 6, size: 1 },
+    { title: "the camera", note: "printed pictures are the best", image: null, x: 52, y: 14, size: 0.95 },
+    { title: "lip gloss", note: "og fan since 2014", image: null, x: 28, y: 62, size: 0.8 },
+    { title: "journal", note: "half diary, half receipts", image: null, x: 76, y: 46, size: 1.1 },
+    { title: "headphones", note: "wired > wireless. always.", image: null, x: 40, y: 74, size: 0.9 },
+    { title: "perfume", note: "signature. non-negotiable.", image: null, x: 10, y: 72, size: 0.7 },
+    { title: "keys", note: "one of these opens nothing", image: null, x: 60, y: 60, size: 0.75 },
   ] as Obsession[],
 };
 

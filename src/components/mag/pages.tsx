@@ -2,50 +2,38 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  about,
-  eggs,
-  feature,
-  music,
-  obsessions,
-  reel,
-  restaurants,
-  site,
-} from "@/content/site";
+import { about, eggs, feature, music, obsessions, reel, restaurants, site } from "@/content/site";
 import { Page } from "@/components/mag/Page";
 import { DuotoneFrame } from "@/components/mag/DuotoneFrame";
+import { CollageBoard } from "@/components/mag/CollageBoard";
 import { Frame } from "@/components/Frame";
-import { Squiggle, TrouserPlate } from "@/components/LineArt";
+import { TrouserPlate } from "@/components/LineArt";
 import { StarButton, StarIcon } from "@/components/Star";
-import { Marquee } from "@/components/Marquee";
 import { Boombox } from "@/components/Boombox";
 import { DraggableCassette } from "@/components/Cassette";
-import { ObsessionBoard } from "@/components/ObsessionBoard";
 import { FilmStrip } from "@/components/FilmStrip";
 import { Camcorder } from "@/components/Camcorder";
 import { BananaSpot } from "@/components/eggs/BananaSpot";
 import { useEggs } from "@/components/eggs/EasterEggs";
 
-/* Shared bits ------------------------------------------------------------- */
+/**
+ * Every spread uses the same two faces and the same rule weights; what
+ * changes page to page is the layout, so the issue reads as one magazine
+ * rather than a set of themed screens.
+ */
 
-function Head({ index, title, italicFrom }: { index: string; title: string; italicFrom?: number }) {
-  const words = title.split(" ");
+function Rule() {
+  return <div className="h-px w-full bg-fg/25" />;
+}
+
+/** Slug line: the small caps section marker every spread opens with. */
+function Slug({ index, children }: { index: string; children: string }) {
   return (
-    <header className="shrink-0">
-      <div className="flex items-baseline justify-between gap-4 border-t border-rule pt-3">
-        <span className="kicker text-fg/50">{index}</span>
-        <StarButton size={13} label={`Star ${title}`} />
-      </div>
-      <h2 className="display mt-3 text-[clamp(2rem,4.6vw,3.9rem)]">
-        {words.map((w, i) => (
-          <span key={w + i} className={italicFrom !== undefined && i >= italicFrom ? "italic" : ""}>
-            {w}
-            {i < words.length - 1 ? " " : ""}
-          </span>
-        ))}
-      </h2>
-      <Squiggle className="mt-2 h-3 w-28 text-accent" />
-    </header>
+    <div className="flex shrink-0 items-center gap-3">
+      <span className="kicker text-[0.55rem] text-fg/45">{index}</span>
+      <div className="h-px flex-1 bg-fg/25" />
+      <span className="kicker text-[0.55rem] text-fg/45">{children}</span>
+    </div>
   );
 }
 
@@ -54,19 +42,15 @@ function Head({ index, title, italicFrom }: { index: string; title: string; ital
 export function CoverPage() {
   const words = site.tagline.split(" ");
   return (
-    <Page folio="Cover" runningHead={site.season} stripe="right">
-      <BananaSpot className="bottom-[18%] right-[8%]" size={26} rotate={-12} />
+    <Page folio="Cover" runningHead={site.season}>
+      <BananaSpot className="bottom-[14%] right-[7%]" size={24} rotate={-12} />
 
-      <div className="grid min-h-0 flex-1 grid-cols-12 items-center gap-6">
-        <div className="col-span-5 hidden h-full max-h-[62vh] items-center lg:flex">
-          <Frame photo={about.portrait} priority showCaption={false} sizes="34vw" className="w-full -rotate-2" />
-        </div>
-
+      <div className="grid min-h-0 flex-1 grid-cols-12 items-center gap-8">
         <div className="col-span-12 lg:col-span-7">
           <p className="kicker text-fg/55">
             {site.issue} — {site.season}
           </p>
-          <h1 className="display mt-4 text-[clamp(3rem,8.4vw,7.5rem)]">
+          <h1 className="display mt-4 text-[clamp(3rem,8.6vw,7.6rem)]">
             {words.map((w, i) => (
               <span key={w + i} className="block overflow-hidden pb-[0.3em] [margin-bottom:-0.3em]">
                 <motion.span
@@ -80,47 +64,74 @@ export function CoverPage() {
               </span>
             ))}
           </h1>
-          <p className="column mt-6 max-w-md">
-            <strong className="font-display text-base not-italic">{site.name.toUpperCase()}</strong>{" "}
-            — {site.role}. Based in {site.location}. Scroll to turn the page.
-          </p>
-          <div className="mt-6 w-40 opacity-90">
-            <TrouserPlate className="h-auto w-full" />
+          <div className="mt-7 max-w-md">
+            <Rule />
+            <p className="mt-3 text-sm leading-relaxed">
+              <strong className="font-display not-italic">{site.name.toUpperCase()}</strong> — {site.role}.
+              Based in {site.location}.
+            </p>
+            <p className="kicker mt-4 text-fg/45">Scroll — the issue reads sideways</p>
           </div>
         </div>
+
+        <div className="col-span-5 hidden h-full max-h-[60vh] items-center lg:flex">
+          <Frame photo={about.portrait} priority showCaption={false} sizes="36vw" className="w-full -rotate-1" />
+        </div>
+      </div>
+
+      <div className="absolute bottom-16 right-12 hidden w-32 opacity-90 lg:block">
+        <TrouserPlate className="h-auto w-full" />
       </div>
     </Page>
   );
 }
 
-/* 02 — About --------------------------------------------------------------- */
+/* 02 — About: the classic feature opener ----------------------------------- */
 
 export function AboutPage() {
   return (
-    <Page id="about" folio="02" runningHead="About" stripe="left">
-      <Head index="01 / About" title="The way she wears it" italicFrom={2} />
+    <Page id="about" folio="02" runningHead="About">
+      <Slug index="01">Feature</Slug>
 
-      <div className="mt-6 grid min-h-0 flex-1 grid-cols-12 gap-8 overflow-hidden">
-        <div className="col-span-12 hidden max-h-[52vh] md:col-span-4 md:block">
-          <Frame photo={about.portrait} sizes="30vw" className="h-full [&>div]:h-full" />
-        </div>
-
-        <div className="col-span-12 min-h-0 md:col-span-8">
-          <p className="font-display text-[clamp(1.1rem,2vw,1.7rem)] italic leading-snug">
+      <div className="mt-6 grid min-h-0 flex-1 grid-cols-12 gap-x-10 gap-y-5 overflow-hidden">
+        {/* headline block */}
+        <div className="col-span-12 lg:col-span-5">
+          <h2 className="display text-[clamp(2rem,4.4vw,3.6rem)] uppercase leading-[0.95] tracking-[0.01em]">
+            The way
+            <br />
+            she wears it
+          </h2>
+          <div className="mt-3 max-w-xs">
+            <Rule />
+            <p className="kicker mt-2 text-[0.5rem] text-fg/50">
+              Pictures — {site.name} · Words — {site.name}
+            </p>
+          </div>
+          <p className="mt-5 max-w-sm text-center font-display text-[clamp(0.95rem,1.5vw,1.25rem)] italic leading-snug">
             {about.standfirst}
           </p>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
-            {about.columns.map((p, i) => (
-              <p key={i} className={`column text-[0.78rem] ${i === 0 ? "column--dropcap" : ""}`}>
-                {p}
-              </p>
-            ))}
-          </div>
-          <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-rule pt-4 sm:grid-cols-4">
+        </div>
+
+        {/* picture block — your images go here */}
+        <div className="col-span-12 grid min-h-0 grid-cols-3 grid-rows-2 gap-2 overflow-hidden lg:col-span-7">
+          <Frame photo={about.gallery[0]} showCaption={false} sizes="30vw" className="col-span-2 [&>div]:h-full" keepRatio={false} boxClassName="h-full" />
+          <Frame photo={about.gallery[1]} showCaption={false} sizes="20vw" className="row-span-2 [&>div]:h-full" keepRatio={false} boxClassName="h-full" />
+          <Frame photo={about.gallery[2]} showCaption={false} sizes="20vw" className="[&>div]:h-full" keepRatio={false} boxClassName="h-full" />
+          <Frame photo={about.gallery[3]} showCaption={false} sizes="20vw" className="[&>div]:h-full" keepRatio={false} boxClassName="h-full" />
+        </div>
+
+        {/* three justified columns, like a real feature */}
+        <div className="col-span-12 grid min-h-0 grid-cols-1 gap-x-8 overflow-hidden sm:grid-cols-3">
+          {about.columns.map((p, i) => (
+            <p key={i} className={`column text-[0.7rem] leading-[1.5] ${i === 0 ? "column--dropcap" : ""}`}>
+              {p}
+            </p>
+          ))}
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-2 self-start">
             {about.facts.map((f) => (
               <div key={f.label}>
-                <dt className="kicker text-[0.55rem] text-fg/45">{f.label}</dt>
-                <dd className="mt-1 text-xs">{f.value}</dd>
+                <dt className="kicker text-[0.45rem] text-fg/40">{f.label}</dt>
+                <dd className="text-[0.7rem]">{f.value}</dd>
               </div>
             ))}
           </dl>
@@ -130,7 +141,7 @@ export function AboutPage() {
   );
 }
 
-/* 03 — Sound --------------------------------------------------------------- */
+/* 03 — Sound & Reel -------------------------------------------------------- */
 
 export function SoundPage() {
   const { secretUnlocked, say } = useEggs();
@@ -169,104 +180,104 @@ export function SoundPage() {
   }
 
   return (
-    <Page id="sound" folio="03" runningHead="Sound" stripe="bottom">
-      <Head index="02 / Sound" title="On repeat" italicFrom={1} />
+    <Page id="sound" folio="04" runningHead="Sound & reel">
+      <Slug index="02">Sound &amp; reel</Slug>
 
-      <div className="mt-6 grid min-h-0 flex-1 grid-cols-12 gap-8 overflow-hidden">
-        <div className="col-span-12 flex min-h-0 flex-col lg:col-span-5">
-          <div className="min-h-0 flex-1">
-            <Boombox
-              loaded={loaded}
-              playing={playing}
-              onTogglePlay={togglePlay}
-              onEject={() => {
-                setPlaying(false);
-                setLoadedId(null);
-              }}
-              deckRef={deckRef}
-              dropHint={dragging}
-            />
-          </div>
-          <audio ref={audioRef} src={loaded?.track.src ?? undefined} onEnded={() => setPlaying(false)} preload="none" />
-        </div>
+      <div className="mt-4 grid min-h-0 flex-1 grid-cols-12 gap-x-10 gap-y-4 overflow-hidden">
+        <div className="col-span-12 lg:col-span-4">
+          <h2 className="display text-[clamp(1.9rem,3.6vw,3rem)] leading-none">
+            On <span className="italic">repeat</span>
+          </h2>
+          <p className="column mt-3 text-[0.7rem] leading-[1.5]">{music.note}</p>
 
-        <div className="col-span-12 flex min-h-0 flex-col lg:col-span-7">
-          <p className="column max-w-lg text-[0.8rem]">{music.note}</p>
-
-          <p className="kicker mt-5 text-fg/45">
-            {loaded ? "Now playing" : `The tray — ${tray.length} tapes`}
-          </p>
           <AnimatePresence mode="wait">
             <motion.p
               key={loaded?.id ?? "none"}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              className="font-display text-2xl leading-tight"
+              exit={{ opacity: 0, y: -5 }}
+              className="mt-3 font-display text-lg leading-tight"
             >
               {loaded ? loaded.track.title : "Nothing in the deck"}
             </motion.p>
           </AnimatePresence>
 
-          <div className="mt-4 flex flex-wrap gap-3 overflow-hidden rounded-sm border border-dashed border-rule p-3">
+          <div className="mt-3 flex flex-wrap gap-2 rounded-sm border border-dashed border-rule p-2">
             {tray.map((c, i) => (
-              <DraggableCassette
-                key={c.id}
-                cassette={c}
-                index={i}
-                deckRef={deckRef}
-                onLoad={load}
-                setDragging={setDragging}
-              />
+              <div key={c.id} className="scale-[0.72] origin-top-left">
+                <DraggableCassette cassette={c} index={i} deckRef={deckRef} onLoad={load} setDragging={setDragging} />
+              </div>
             ))}
           </div>
+          <audio ref={audioRef} src={loaded?.track.src ?? undefined} onEnded={() => setPlaying(false)} preload="none" />
+        </div>
 
-          <div className="mt-auto border-y border-rule py-3">
-            <Marquee items={music.onRepeat} duration={44} />
-          </div>
+        <div className="col-span-6 hidden min-h-0 lg:col-span-4 lg:block">
+          <Boombox
+            loaded={loaded}
+            playing={playing}
+            onTogglePlay={togglePlay}
+            onEject={() => {
+              setPlaying(false);
+              setLoadedId(null);
+            }}
+            deckRef={deckRef}
+            dropHint={dragging}
+          />
+        </div>
+
+        <div className="col-span-12 min-h-0 lg:col-span-4">
+          <Camcorder />
+        </div>
+
+        {/* the reel, full width along the foot of the spread */}
+        <div className="col-span-12 min-h-0" data-lenis-prevent>
+          <FilmStrip photos={reel.photos} />
         </div>
       </div>
     </Page>
   );
 }
 
-/* 04 — Obsessions ---------------------------------------------------------- */
+/* 04 — Obsessions: the flat lay --------------------------------------------- */
 
 export function ObsessionsPage() {
   return (
-    <Page id="obsessions" folio="04" runningHead="The list" stripe="right">
-      <BananaSpot className="right-[6%] top-[14%]" size={24} rotate={26} />
-      <Head index="03 / The list" title="Summer obsessions" italicFrom={1} />
-      <p className="kicker mt-3 shrink-0 text-fg/45">{obsessions.intro}</p>
-      <div className="mt-6 min-h-0 flex-1 overflow-hidden">
-        <ObsessionBoard items={obsessions.items} />
+    <Page id="obsessions" folio="06" runningHead="The list" tone="#faf7f1">
+      <BananaSpot className="right-[5%] top-[12%]" size={22} rotate={26} />
+      <Slug index="03">The list</Slug>
+
+      <div className="mt-3 shrink-0">
+        <h2 className="display text-[clamp(2rem,4.6vw,3.6rem)]">{obsessions.title}</h2>
+        <p className="kicker mt-1 text-[0.5rem] text-fg/45">{obsessions.intro}</p>
+      </div>
+
+      <div className="mt-2 min-h-0 flex-1">
+        <CollageBoard items={obsessions.items} />
       </div>
     </Page>
   );
 }
 
-/* 05 — Feature ------------------------------------------------------------- */
+/* 05 — Feature: the picture spread ----------------------------------------- */
 
 export function FeaturePage() {
   return (
-    <Page id="feature" folio="06" runningHead={feature.kicker} stripe="none" className="bg-[#fff6f9]">
+    <Page id="feature" folio="08" runningHead={feature.kicker} tone="#fff5f8">
       <div className="grid min-h-0 flex-1 grid-cols-12 gap-6 overflow-hidden">
-        <div className="col-span-12 flex min-h-0 flex-col md:col-span-7">
-          <p className="kicker text-[#c8175f]">{feature.kicker}</p>
-          <h2 className="display mt-2 text-[clamp(2rem,5vw,4.2rem)] text-[#14110f]">
-            {feature.title}
-          </h2>
-          <DuotoneFrame src={feature.image} alt={feature.caption} className="mt-4 min-h-0 flex-1" />
-          <p className="kicker mt-2 text-[#c8175f]">{feature.caption}</p>
+        <div className="col-span-12 flex min-h-0 flex-col md:col-span-8">
+          <div className="flex shrink-0 items-baseline gap-3">
+            <span className="kicker text-[0.55rem] text-[#c8175f]">{feature.kicker}</span>
+            <div className="h-px flex-1 bg-[#c8175f]/35" />
+          </div>
+          <h2 className="display mt-2 shrink-0 text-[clamp(2rem,5vw,4rem)] text-[#14110f]">{feature.title}</h2>
+          <DuotoneFrame src={feature.image} alt={feature.caption} className="mt-3 min-h-0 flex-1" />
+          <p className="kicker mt-2 shrink-0 text-[0.5rem] text-[#c8175f]">{feature.caption}</p>
         </div>
 
-        <div className="col-span-12 grid min-h-0 grid-cols-2 gap-5 overflow-hidden md:col-span-5">
+        <div className="col-span-12 flex min-h-0 flex-col justify-end gap-4 overflow-hidden md:col-span-4">
           {feature.columns.map((c, i) => (
-            <p
-              key={i}
-              className="font-mono text-[0.66rem] leading-[1.5] text-[#c8175f]"
-              style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}
-            >
+            <p key={i} className="text-[0.7rem] leading-[1.55] text-[#c8175f]">
               {c}
             </p>
           ))}
@@ -276,79 +287,55 @@ export function FeaturePage() {
   );
 }
 
-/* 06 — Table --------------------------------------------------------------- */
+/* 06 — Table: the one spread with the olive field ---------------------------- */
 
 export function TablePage() {
   return (
-    <Page id="table" folio="08" runningHead="The table" stripe="left">
-      <BananaSpot className="bottom-[10%] left-[4%]" size={24} rotate={38} />
-      <Head index="04 / The table" title="Where I eat" italicFrom={1} />
-      <p className="kicker mt-3 shrink-0 text-fg/45">{restaurants.intro}</p>
+    <Page id="table" folio="10" runningHead="The table" stripe="right">
+      <BananaSpot className="bottom-[8%] left-[4%]" size={22} rotate={38} />
+      <Slug index="04">The table</Slug>
 
-      <div className="mt-5 grid min-h-0 flex-1 grid-cols-2 gap-3 overflow-hidden lg:grid-cols-3">
+      <div className="mt-3 shrink-0">
+        <h2 className="display text-[clamp(2rem,4.6vw,3.6rem)]">
+          Where I <span className="italic">eat</span>
+        </h2>
+        <p className="kicker mt-1 text-[0.5rem] text-fg/45">{restaurants.intro}</p>
+      </div>
+
+      <div className="mt-4 grid min-h-0 flex-1 grid-cols-2 gap-x-8 gap-y-3 overflow-hidden lg:w-[58%] lg:grid-cols-2">
         {restaurants.items.map((place, i) => (
-          <motion.article
-            key={place.name + i}
-            whileHover={{ y: -4, rotate: i % 2 === 0 ? -0.7 : 0.7 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="grain relative flex min-h-0 flex-col border border-rule bg-paper p-3"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-display text-base leading-tight">{place.name}</h3>
-              <span className="kicker shrink-0 text-[0.5rem] text-fg/45">{place.city}</span>
+          <article key={place.name + i} className="flex min-h-0 flex-col border-t border-fg/25 pt-2">
+            <div className="flex items-baseline justify-between gap-2">
+              <h3 className="font-display text-[0.95rem] leading-tight">{place.name}</h3>
+              <span className="kicker text-[0.45rem] text-fg/45">{place.city}</span>
             </div>
-            <div className="mt-1.5 flex gap-0.5 text-accent">
+            <div className="mt-1 flex gap-0.5 text-accent">
               {Array.from({ length: 5 }, (_, s) => (
-                <StarIcon key={s} size={10} filled={s < place.stars} />
+                <StarIcon key={s} size={9} filled={s < place.stars} />
               ))}
             </div>
-            <p className="mt-2 flex-1 text-[0.7rem] leading-snug text-fg/70">{place.note}</p>
-            <p className="kicker mt-2 border-t border-rule pt-1.5 text-[0.5rem] text-fg/50">
-              {place.order}
-            </p>
-          </motion.article>
+            <p className="mt-1 text-[0.65rem] leading-snug text-fg/70">{place.note}</p>
+            <p className="kicker mt-1 text-[0.45rem] text-fg/45">{place.order}</p>
+          </article>
         ))}
       </div>
     </Page>
   );
 }
 
-/* 07 — Reel ---------------------------------------------------------------- */
-
-export function ReelPage() {
-  return (
-    <Page id="reel" folio="10" runningHead="Elsewhere" stripe="bottom">
-      <Head index="05 / Elsewhere" title={`Recently, ${reel.place}`} italicFrom={1} />
-
-      <div className="mt-5 grid min-h-0 flex-1 grid-cols-12 items-center gap-6 overflow-hidden">
-        <div className="col-span-12 min-h-0 lg:col-span-6">
-          <Camcorder />
-        </div>
-        <div className="col-span-12 lg:col-span-6">
-          <p className="kicker text-fg/45">
-            {reel.dates} · {reel.photos.length} frames
-          </p>
-          <p className="mt-2 font-display text-xl italic leading-tight">{reel.blurb}</p>
-          <div className="mt-4" data-lenis-prevent>
-            <FilmStrip photos={reel.photos} />
-          </div>
-        </div>
-      </div>
-    </Page>
-  );
-}
-
-/* 08 — Colophon ------------------------------------------------------------ */
+/* 07 — Colophon ------------------------------------------------------------- */
 
 export function ColophonPage() {
   return (
-    <Page folio="Back" runningHead="Colophon" stripe="right">
+    <Page folio="Back" runningHead="Colophon">
       <div className="flex min-h-0 flex-1 flex-col justify-center">
         <p className="display text-[clamp(3rem,10vw,8rem)]">{site.name}</p>
-        <p className="kicker mt-4 text-fg/50">
+        <div className="mt-4 max-w-md">
+          <Rule />
+        </div>
+        <p className="kicker mt-3 text-fg/50">
           {site.issue} · {site.season} · Printed on the internet
         </p>
-        <Squiggle className="mt-6 h-4 w-64 text-accent" />
 
         <div className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
           {site.socials.map((s) => (
@@ -356,9 +343,10 @@ export function ColophonPage() {
               {s.label} ↗
             </a>
           ))}
+          <StarButton size={14} label="One more star" />
         </div>
 
-        <p className="mt-10 max-w-sm font-display text-lg italic leading-snug text-fg/60">
+        <p className="mt-10 max-w-sm font-display text-base italic leading-snug text-fg/55">
           {eggs.endOfIssue}
         </p>
       </div>

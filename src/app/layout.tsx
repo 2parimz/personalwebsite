@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Inter } from "next/font/google";
+import { Bodoni_Moda, Caveat, Inter } from "next/font/google";
 import "./globals.css";
 
 import { site } from "@/content/site";
@@ -20,6 +20,13 @@ const sans = Inter({
   display: "swap",
 });
 
+/** Used in exactly one place: the annotations on the flat-lay spread. */
+const hand = Caveat({
+  subsets: ["latin"],
+  variable: "--font-hand-src",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: `${site.name} — ${site.tagline}`,
   description: `${site.role}. ${site.issue}, ${site.season}.`,
@@ -32,7 +39,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="day" className={`${display.variable} ${sans.variable}`}>
+    <html
+      lang="en"
+      data-theme="day"
+      className={`${display.variable} ${sans.variable} ${hand.variable}`}
+    >
       <body>
         <EasterEggs>
           <CustomCursor />
