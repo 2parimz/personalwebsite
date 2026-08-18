@@ -5,11 +5,15 @@ filename below, then set the matching `src` in the `cover.objects` list in
 `src/content/site.ts` — e.g. `src: "/objects/plant.png"`.
 
 Until a file is there, that object shows as a dashed outline with its name,
-so you can still arrange the layout.
+so you can still arrange the layout. Everything is in place except the zebra
+cushion, which is still missing.
+
+When you add a file, also set its real pixel size as `natural: [w, h]` in
+`site.ts` — Next uses it to serve a smaller, re-compressed copy.
 
 | Save as | Which image |
 | --- | --- |
-| `rug.jpg` | The rust / terracotta rug texture |
+| `rug.jpg` | The rust / terracotta rug texture (stored landscape) |
 | `sofa-velvet.png` | The brown velvet modular sofa |
 | `sofa-linen.png` | The cream linen loveseat |
 | `coffee-table.png` | The Noguchi-style glass coffee table |

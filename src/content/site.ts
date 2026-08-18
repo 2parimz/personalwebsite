@@ -50,6 +50,12 @@ export type CoverObject = {
   y: number;
   w: number;
   rotate?: number;
+  /**
+   * The file's real pixel size. Next needs it to reserve the right shape and
+   * to serve a correctly sized, re-compressed copy — it is not the size the
+   * object appears at, which is `w` above.
+   */
+  natural?: [number, number];
 };
 
 /**
@@ -60,15 +66,16 @@ export type CoverObject = {
  */
 export const cover = {
   objects: [
-    { id: "rug", src: null, label: "Rug", x: 10, y: 60, w: 64, rotate: -1 },
-    { id: "sofa-velvet", src: null, label: "Velvet sofa", x: 40, y: 45, w: 42 },
-    { id: "sofa-linen", src: null, label: "Linen loveseat", x: 2, y: 56, w: 27, rotate: 1 },
-    { id: "coffee-table", src: null, label: "Coffee table", x: 32, y: 70, w: 24 },
-    { id: "plant", src: null, label: "Plant", x: 79, y: 16, w: 17 },
-    { id: "chandelier", src: null, label: "Chandelier", x: 56, y: -2, w: 12 },
-    { id: "lamp", src: null, label: "Lamp", x: 28, y: 42, w: 7 },
-    { id: "tulips", src: null, label: "Tulips", x: 69, y: 55, w: 9, rotate: -3 },
-    { id: "pillow-zebra", src: null, label: "Zebra pillow", x: 18, y: 50, w: 11, rotate: -6 },
+    { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 8, y: 47, w: 55, rotate: -1, natural: [1100, 733] },
+    { id: "sofa-velvet", src: "/objects/sofa-velvet.png", label: "Velvet sofa", x: 41, y: 34, w: 42, natural: [1200, 516] },
+    { id: "sofa-linen", src: "/objects/sofa-linen.png", label: "Linen loveseat", x: 4, y: 46, w: 26, rotate: 1, natural: [1200, 808] },
+    { id: "coffee-table", src: "/objects/coffee-table.png", label: "Coffee table", x: 33, y: 66, w: 24, natural: [914, 452] },
+    { id: "plant", src: "/objects/plant.png", label: "Plant", x: 80, y: 12, w: 16, natural: [725, 1200] },
+    { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 60, y: -4, w: 12, natural: [782, 1172] },
+    { id: "lamp", src: "/objects/lamp.png", label: "Lamp", x: 29, y: 40, w: 7, natural: [398, 595] },
+    { id: "tulips", src: "/objects/tulips.png", label: "Tulips", x: 70, y: 52, w: 9, rotate: -3, natural: [644, 707] },
+    /* Still to come — this one did not make it into the folder. */
+    { id: "pillow-zebra", src: null, label: "Zebra pillow", x: 20, y: 44, w: 10, rotate: -6 },
   ] as CoverObject[],
 };
 

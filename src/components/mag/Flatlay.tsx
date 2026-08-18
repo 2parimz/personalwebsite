@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CoverObject } from "@/content/site";
 import { useEggs } from "@/components/eggs/EasterEggs";
@@ -162,13 +163,15 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
           className="group pointer-events-auto absolute cursor-grab touch-none select-none transition-[filter,transform] duration-300 data-[dragging]:cursor-grabbing data-[dragging]:scale-[1.02]"
         >
           {item.src ? (
-            /* A plain img, not next/image: these are cut-outs of unknown
-               aspect ratio, and width-only resizing needs height to stay
-               automatic. */
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            /* width/height are the file's real pixel size, which lets Next
+               re-compress and serve a right-sized copy; `h-auto w-full` then
+               overrides both so the on-page size stays driven by the drag. */
+            <Image
               src={item.src}
               alt={item.label}
+              width={item.natural?.[0] ?? 1200}
+              height={item.natural?.[1] ?? 1200}
+              sizes="(max-width: 768px) 60vw, 45vw"
               draggable={false}
               className="block h-auto w-full [filter:drop-shadow(0_16px_20px_rgba(20,17,15,0.26))] group-data-[dragging]:[filter:drop-shadow(0_30px_34px_rgba(20,17,15,0.34))]"
             />
