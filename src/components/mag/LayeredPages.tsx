@@ -27,9 +27,13 @@ export const LAYER = {
   buriedScale: 0.975,
   /** Paper resting on paper — falls on the page underneath. */
   edgeShadow: "-30px 0 70px rgba(20, 17, 15, 0.2)",
-  /** Wheel delta needed to commit to a turn, and the cooldown after one. */
+  /** Wheel delta needed to commit to a turn. */
   wheelThreshold: 60,
-  wheelLockMs: 620,
+  /** Cooldown after a turn. Must outlast `duration`, or the tail of a
+      trackpad flick lands a second turn before the first has finished. */
+  wheelLockMs: 900,
+  /** A gap this long in the wheel stream counts as a new gesture. */
+  wheelIdleMs: 180,
   /** Quiet time after a free drag before the deck settles onto a spread. */
   settleAfterMs: 140,
 };
@@ -86,6 +90,8 @@ export function LayeredPages({ children }: { children: ReactNode }) {
   const scrollRaf = useRef(0);
   const tweenRaf = useRef(0);
   const animatingRef = useRef(false);
+  /** The spread we are heading to (or resting on). */
+  const targetRef = useRef(0);
   const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** goTo, held in a ref so the scroll listener can settle without
       re-subscribing every time the callback identity changes. */
@@ -117,6 +123,7 @@ export function LayeredPages({ children }: { children: ReactNode }) {
         // Flipping at the halfway point means the arriving page starts its
         // stagger while it is still moving, not after it lands.
         const nearest = Math.round(p);
+        if (!animatingRef.current) targetRef.current = nearest;
         if (nearest !== indexRef.current) setIndex(nearest);
       });
 
@@ -148,7 +155,11 @@ export function LayeredPages({ children }: { children: ReactNode }) {
       const w = el.clientWidth;
       const from = el.scrollLeft;
       const to = clamped * w;
-      if (Math.abs(to - from) < 1) return;
+      if (Math.abs(to - from) < 1) {
+        targetRef.current = clamped;
+        return;
+      }
+      targetRef.current = clamped;
 
       setAnimating(true);
       animatingRef.current = true;
@@ -176,7 +187,13 @@ export function LayeredPages({ children }: { children: ReactNode }) {
     settleRef.current = goTo;
   }, [goTo]);
 
-  const go = useCallback((delta: number) => goTo(indexRef.current + delta), [goTo]);
+  /**
+   * Steps from the spread we are heading to, not the one the scroll position
+   * currently rounds to. Mid-tween those differ — the live position rounds to
+   * the destination as soon as it passes halfway — so reversing off the live
+   * value stepped from the wrong base and skipped a spread.
+   */
+  const go = useCallback((delta: number) => goTo(targetRef.current + delta), [goTo]);
 
   /* Wheel, keys, and re-alignment on resize. Native touch drag needs nothing. */
   useEffect(() => {
@@ -184,17 +201,33 @@ export function LayeredPages({ children }: { children: ReactNode }) {
     if (!el) return;
     let acc = 0;
     let lock = false;
+    let lastAt = 0;
 
     function onWheel(event: WheelEvent) {
       if ((event.target as HTMLElement)?.closest?.("[data-layer-ignore]")) return;
       event.preventDefault();
+
+      const now = performance.now();
+      // A pause means a fresh, deliberate gesture — drop whatever was left
+      // over, so a flick one way does not part-fund a turn the other way.
+      if (now - lastAt > LAYER.wheelIdleMs) acc = 0;
+      lastAt = now;
+
+      // Swallow momentum while a turn is running rather than banking it.
+      if (lock) {
+        acc = 0;
+        return;
+      }
+
       acc += Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-      if (lock || Math.abs(acc) < LAYER.wheelThreshold) return;
+      if (Math.abs(acc) < LAYER.wheelThreshold) return;
+
       lock = true;
       go(acc > 0 ? 1 : -1);
       acc = 0;
       window.setTimeout(() => {
         lock = false;
+        acc = 0;
       }, LAYER.wheelLockMs);
     }
 
@@ -255,7 +288,6 @@ export function LayeredPages({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <PageDots total={total} index={index} onPick={goTo} />
     </DeckContext.Provider>
   );
 }
@@ -297,29 +329,3 @@ function Layer({
   );
 }
 
-function PageDots({
-  total,
-  index,
-  onPick,
-}: {
-  total: number;
-  index: number;
-  onPick: (i: number) => void;
-}) {
-  return (
-    <div className="fixed bottom-5 left-1/2 z-[55] flex -translate-x-1/2 items-center gap-2">
-      {Array.from({ length: total }, (_, i) => (
-        <button
-          key={i}
-          type="button"
-          onClick={() => onPick(i)}
-          aria-label={`Spread ${i + 1}`}
-          aria-current={i === index}
-          className={`h-1.5 rounded-full transition-all duration-500 ${
-            i === index ? "w-6 bg-fg/70" : "w-1.5 bg-fg/25 hover:bg-fg/45"
-          }`}
-        />
-      ))}
-    </div>
-  );
-}

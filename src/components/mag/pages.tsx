@@ -42,7 +42,7 @@ function Slug({ index, children }: { index: string; children: string }) {
 export function CoverPage() {
   const words = site.tagline.split(" ");
   return (
-    <Page folio="Cover" runningHead={site.season}>
+    <Page folio="Cover">
       <BananaSpot className="bottom-[14%] right-[7%]" size={24} rotate={-12} />
 
       <div className="grid min-h-0 flex-1 grid-cols-12 items-center gap-8">
@@ -92,7 +92,7 @@ export function CoverPage() {
 
 export function AboutPage() {
   return (
-    <Page id="about" folio="02" runningHead="About">
+    <Page id="about" folio="02">
       <Slug index="01">Feature</Slug>
 
       <div className="mt-6 grid min-h-0 flex-1 grid-cols-12 gap-x-10 gap-y-5 overflow-hidden">
@@ -182,7 +182,7 @@ export function SoundPage() {
   }
 
   return (
-    <Page id="sound" folio="04" runningHead="Sound & reel">
+    <Page id="sound" folio="04">
       <Slug index="02">Sound &amp; reel</Slug>
 
       <div className="mt-4 grid min-h-0 flex-1 grid-cols-12 gap-x-10 gap-y-4 overflow-hidden">
@@ -245,7 +245,7 @@ export function SoundPage() {
 
 export function ObsessionsPage() {
   return (
-    <Page id="obsessions" folio="06" runningHead="The list">
+    <Page id="obsessions" folio="06">
       <BananaSpot className="right-[5%] top-[12%]" size={22} rotate={26} />
       <Slug index="03">The list</Slug>
 
@@ -265,7 +265,7 @@ export function ObsessionsPage() {
 
 export function FeaturePage() {
   return (
-    <Page id="feature" folio="08" runningHead={feature.kicker}>
+    <Page id="feature" folio="08">
       <div className="grid min-h-0 flex-1 grid-cols-12 gap-6 overflow-hidden">
         <div className="col-span-12 flex min-h-0 flex-col md:col-span-8">
           <div className="flex shrink-0 items-baseline gap-3">
@@ -293,7 +293,7 @@ export function FeaturePage() {
 
 export function TablePage() {
   return (
-    <Page id="table" folio="10" runningHead="The table" stripe="right">
+    <Page id="table" folio="10" stripe="right">
       <BananaSpot className="bottom-[8%] left-[4%]" size={22} rotate={38} />
       <Slug index="04">The table</Slug>
 
@@ -329,7 +329,7 @@ export function TablePage() {
 
 export function ColophonPage() {
   return (
-    <Page folio="Back" runningHead="Colophon">
+    <Page folio="Back">
       <div className="flex min-h-0 flex-1 flex-col justify-center">
         <p className="display text-[clamp(3rem,10vw,8rem)]">{site.name}</p>
         <div className="mt-4 max-w-md">
