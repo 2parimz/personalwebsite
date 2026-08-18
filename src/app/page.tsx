@@ -1,4 +1,4 @@
-import { HorizontalPages } from "@/components/mag/HorizontalPages";
+import { PageDeck } from "@/components/mag/PageDeck";
 import {
   AboutPage,
   ColophonPage,
@@ -11,7 +11,7 @@ import {
 
 export default function Home() {
   return (
-    <HorizontalPages>
+    <PageDeck>
       <CoverPage />
       <AboutPage />
       <SoundPage />
@@ -19,6 +19,6 @@ export default function Home() {
       <FeaturePage />
       <TablePage />
       <ColophonPage />
-    </HorizontalPages>
+    </PageDeck>
   );
 }

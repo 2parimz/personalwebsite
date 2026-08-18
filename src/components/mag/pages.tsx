@@ -70,7 +70,9 @@ export function CoverPage() {
               <strong className="font-display not-italic">{site.name.toUpperCase()}</strong> — {site.role}.
               Based in {site.location}.
             </p>
-            <p className="kicker mt-4 text-fg/45">Scroll — the issue reads sideways</p>
+            <p className="kicker mt-4 text-fg/45">
+              Scroll, or pull the bottom corner
+            </p>
           </div>
         </div>
 
@@ -231,7 +233,7 @@ export function SoundPage() {
         </div>
 
         {/* the reel, full width along the foot of the spread */}
-        <div className="col-span-12 min-h-0" data-lenis-prevent>
+        <div className="col-span-12 min-h-0" data-peel-ignore>
           <FilmStrip photos={reel.photos} />
         </div>
       </div>
@@ -243,7 +245,7 @@ export function SoundPage() {
 
 export function ObsessionsPage() {
   return (
-    <Page id="obsessions" folio="06" runningHead="The list" tone="#faf7f1">
+    <Page id="obsessions" folio="06" runningHead="The list">
       <BananaSpot className="right-[5%] top-[12%]" size={22} rotate={26} />
       <Slug index="03">The list</Slug>
 
@@ -263,7 +265,7 @@ export function ObsessionsPage() {
 
 export function FeaturePage() {
   return (
-    <Page id="feature" folio="08" runningHead={feature.kicker} tone="#fff5f8">
+    <Page id="feature" folio="08" runningHead={feature.kicker}>
       <div className="grid min-h-0 flex-1 grid-cols-12 gap-6 overflow-hidden">
         <div className="col-span-12 flex min-h-0 flex-col md:col-span-8">
           <div className="flex shrink-0 items-baseline gap-3">

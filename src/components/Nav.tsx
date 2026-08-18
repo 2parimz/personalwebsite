@@ -1,29 +1,22 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { site } from "@/content/site";
 import { useEggs } from "@/components/eggs/EasterEggs";
-import { useScroller } from "@/components/mag/scroller";
+import { useDeck } from "@/components/mag/deck";
 
-const PAGES = 7;
+/** Section order must match the deck order in app/page.tsx. */
+const ORDER = ["#about", "#sound", "#obsessions", "#feature", "#table"];
+const FIRST_SECTION = 1;
 
 /**
- * The masthead bar. It stays put — on a horizontal issue there is no
- * "scrolling down past it" — and carries a live page count instead.
+ * The masthead bar. It stays put and carries the page count; the nav links
+ * jump the deck rather than scrolling anywhere.
  */
 export function Nav() {
-  const container = useScroller();
-  const { scrollXProgress } = useScroll({ container: container ?? undefined, axis: "x" });
-  const [page, setPage] = useState(1);
-
+  const deck = useDeck();
   const { say, theme } = useEggs();
   const nameClicks = useRef<number[]>([]);
-
-  const spread = useTransform(scrollXProgress, (v) =>
-    Math.min(PAGES, Math.max(1, Math.round(v * (PAGES - 1)) + 1))
-  );
-  useMotionValueEvent(spread, "change", (v) => setPage(v));
 
   /** Three fast clicks on the masthead nudges you toward the code. */
   function onNameClick() {
@@ -33,6 +26,13 @@ export function Nav() {
       nameClicks.current = [];
       say("↑ ↑ ↓ ↓ ← → ← → B A");
     }
+  }
+
+  function jump(href: string) {
+    if (!deck) return;
+    const target = ORDER.indexOf(href) + FIRST_SECTION;
+    if (target < 0) return;
+    deck.go(target - deck.index);
   }
 
   return (
@@ -47,14 +47,21 @@ export function Nav() {
 
         <div className="hidden items-center gap-6 md:flex">
           {site.nav.map((item) => (
-            <a key={item.href} href={item.href} className="kicker link-underline text-fg/70 hover:text-fg">
+            <button
+              key={item.href}
+              type="button"
+              onClick={() => jump(item.href)}
+              className="kicker link-underline text-fg/70 hover:text-fg"
+            >
               {item.label}
-            </a>
+            </button>
           ))}
         </div>
 
         <span className="kicker text-fg/45">
-          {theme === "noir" ? "Director's cut" : `${page} / ${PAGES}`}
+          {theme === "noir"
+            ? "Director's cut"
+            : `${(deck?.index ?? 0) + 1} / ${deck?.total ?? 1}`}
         </span>
       </nav>
     </header>

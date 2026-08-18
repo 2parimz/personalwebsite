@@ -61,10 +61,6 @@ body {
   color: var(--bg);
 }
 
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
 /* The olive field that sweeps across each spread. */
 :root {
   --olive-field: rgb(111 112 66 / 0.9);
@@ -155,18 +151,6 @@ body {
   transform: scaleX(1);
 }
 
-.marquee-track {
-  animation: marquee var(--marquee-duration, 40s) linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -175,9 +159,6 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .marquee-track {
-    animation: none;
   }
   *,
   *::before,
