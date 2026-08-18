@@ -40,7 +40,13 @@ export function PageDeck({ children }: { children: ReactNode }) {
   const [turning, setTurning] = useState(false);
 
   const dragging = useRef(false);
-  const raf = useRef(0);
+  /**
+   * Two separate handles on purpose. They used to share one, which meant a
+   * finished tween left a stale id behind and the drag throttle's
+   * `if (moveRaf.current) return` then swallowed every later pointermove.
+   */
+  const tweenRaf = useRef(0);
+  const moveRaf = useRef(0);
   const pending = useRef<Pt | null>(null);
 
   useEffect(() => {
@@ -62,15 +68,19 @@ export function PageDeck({ children }: { children: ReactNode }) {
   /** Tween the corner between two points; used by every non-drag trigger. */
   const tween = useCallback((from: Pt, to: Pt, ms: number, done?: () => void) => {
     const start = performance.now();
-    cancelAnimationFrame(raf.current);
+    cancelAnimationFrame(tweenRaf.current);
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / ms);
       const e = 1 - Math.pow(1 - t, 3);
       setCorner({ x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e });
-      if (t < 1) raf.current = requestAnimationFrame(step);
-      else done?.();
+      if (t < 1) {
+        tweenRaf.current = requestAnimationFrame(step);
+      } else {
+        tweenRaf.current = 0;
+        done?.();
+      }
     };
-    raf.current = requestAnimationFrame(step);
+    tweenRaf.current = requestAnimationFrame(step);
   }, []);
 
   const go = useCallback(
@@ -121,9 +131,9 @@ export function PageDeck({ children }: { children: ReactNode }) {
     if (!dragging.current) return;
     const r = shell.current!.getBoundingClientRect();
     pending.current = { x: event.clientX - r.left, y: event.clientY - r.top };
-    if (raf.current) return;
-    raf.current = requestAnimationFrame(() => {
-      raf.current = 0;
+    if (moveRaf.current) return;
+    moveRaf.current = requestAnimationFrame(() => {
+      moveRaf.current = 0;
       if (pending.current) setCorner(pending.current);
     });
   };
@@ -131,8 +141,8 @@ export function PageDeck({ children }: { children: ReactNode }) {
   const endDrag = () => {
     if (!dragging.current) return;
     dragging.current = false;
-    cancelAnimationFrame(raf.current);
-    raf.current = 0;
+    cancelAnimationFrame(moveRaf.current);
+    moveRaf.current = 0;
     const p = peel?.progress ?? 0;
     if (p > COMPLETE_AT) go(1);
     else if (corner) {
@@ -205,7 +215,13 @@ export function PageDeck({ children }: { children: ReactNode }) {
     };
   }, [go]);
 
-  useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(tweenRaf.current);
+      cancelAnimationFrame(moveRaf.current);
+    },
+    []
+  );
 
   /* -------------------------------- render -------------------------------- */
 
