@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { about, eggs, feature, music, obsessions, reel, restaurants, site } from "@/content/site";
+import { about, cover, eggs, feature, music, obsessions, reel, restaurants, site } from "@/content/site";
 import { Page } from "@/components/mag/Page";
+import { Flatlay } from "@/components/mag/Flatlay";
 import { DuotoneFrame } from "@/components/mag/DuotoneFrame";
 import { CollageBoard } from "@/components/mag/CollageBoard";
 import { Frame } from "@/components/Frame";
@@ -42,11 +43,11 @@ function Slug({ index, children }: { index: string; children: string }) {
 export function CoverPage() {
   const words = site.tagline.split(" ");
   return (
-    <Page folio="Cover">
+    <Page folio="Cover" bleed={<Flatlay objects={cover.objects} />}>
       <BananaSpot className="bottom-[14%] right-[7%]" size={24} rotate={-12} />
 
-      <div className="grid min-h-0 flex-1 grid-cols-12 items-center gap-8">
-        <div className="col-span-12 lg:col-span-7">
+      <div className="grid min-h-0 flex-1 grid-cols-12 items-start gap-8">
+        <div className="col-span-12 lg:col-span-6">
           <p className="kicker text-fg/55">
             {site.issue} — {site.season}
           </p>
@@ -71,14 +72,11 @@ export function CoverPage() {
               Based in {site.location}.
             </p>
             <p className="kicker mt-4 text-fg/45">
-              Scroll — each spread stacks over the last
+              Drag anything. Shift-drag a corner to resize.
             </p>
           </div>
         </div>
 
-        <div className="col-span-5 hidden h-full max-h-[60vh] items-center lg:flex">
-          <Frame photo={about.portrait} priority showCaption={false} sizes="36vw" className="w-full -rotate-1" />
-        </div>
       </div>
 
       <div className="absolute bottom-16 right-12 hidden w-32 opacity-90 lg:block">

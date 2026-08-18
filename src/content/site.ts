@@ -38,6 +38,40 @@ export const site = {
   ],
 } as const;
 
+/* ------------------------------ Cover flatlay ----------------------------- */
+
+export type CoverObject = {
+  id: string;
+  /** File in /public/objects. Cut-outs on transparent PNG work best. */
+  src: string | null;
+  label: string;
+  /** Starting position and width, as % of the spread. Drag to change. */
+  x: number;
+  y: number;
+  w: number;
+  rotate?: number;
+};
+
+/**
+ * The objects scattered across the cover. Array order sets the starting
+ * stacking order — first is furthest back. Clicking an object brings it to
+ * the front, dragging moves it, and shift-drag (or the corner handle)
+ * resizes it. Press L to copy the arrangement back out as code.
+ */
+export const cover = {
+  objects: [
+    { id: "rug", src: null, label: "Rug", x: 10, y: 60, w: 64, rotate: -1 },
+    { id: "sofa-velvet", src: null, label: "Velvet sofa", x: 40, y: 45, w: 42 },
+    { id: "sofa-linen", src: null, label: "Linen loveseat", x: 2, y: 56, w: 27, rotate: 1 },
+    { id: "coffee-table", src: null, label: "Coffee table", x: 32, y: 70, w: 24 },
+    { id: "plant", src: null, label: "Plant", x: 79, y: 16, w: 17 },
+    { id: "chandelier", src: null, label: "Chandelier", x: 56, y: -2, w: 12 },
+    { id: "lamp", src: null, label: "Lamp", x: 28, y: 42, w: 7 },
+    { id: "tulips", src: null, label: "Tulips", x: 69, y: 55, w: 9, rotate: -3 },
+    { id: "pillow-zebra", src: null, label: "Zebra pillow", x: 18, y: 50, w: 11, rotate: -6 },
+  ] as CoverObject[],
+};
+
 /* ---------------------------------- About --------------------------------- */
 
 export const about = {

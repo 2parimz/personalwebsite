@@ -12,6 +12,8 @@ export function Page({
   id,
   folio,
   children,
+  /** A full-bleed layer above the copy — used by the cover's flatlay. */
+  bleed,
   /** The olive field appears on one spread only; leave it off elsewhere. */
   stripe = "none",
   className = "",
@@ -19,6 +21,7 @@ export function Page({
   id?: string;
   folio: string;
   children: ReactNode;
+  bleed?: ReactNode;
   stripe?: "right" | "bottom" | "none";
   className?: string;
 }) {
@@ -38,6 +41,8 @@ export function Page({
       <div className="page-stage relative z-10 flex h-full flex-col px-8 pb-12 pt-24 sm:px-14 sm:pb-14 sm:pt-28">
         {children}
       </div>
+
+      {bleed && <div className="absolute inset-0 z-[15]">{bleed}</div>}
 
       {/* folio line */}
       <div className="pointer-events-none absolute inset-x-8 bottom-4 z-20 flex items-end justify-between sm:inset-x-14">
