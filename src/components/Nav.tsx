@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { site } from "@/content/site";
 import { useEggs } from "@/components/eggs/EasterEggs";
 import { useDeck } from "@/components/mag/deck";
+import { MarkerCircle } from "@/components/mag/MarkerCircle";
 
 /** Section order must match the deck order in app/page.tsx. */
 const ORDER = ["#about", "#sound", "#obsessions", "#feature", "#table"];
@@ -45,15 +46,18 @@ export function Nav() {
           </span>
         </button>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           {site.nav.map((item) => (
             <button
               key={item.href}
               type="button"
               onClick={() => jump(item.href)}
-              className="kicker link-underline text-fg/70 hover:text-fg"
+              className="group relative px-3 py-1.5"
             >
-              {item.label}
+              <span className="kicker relative z-10 text-fg/70 transition-colors group-hover:text-fg">
+                {item.label}
+              </span>
+              <MarkerCircle />
             </button>
           ))}
         </div>

@@ -64,9 +64,46 @@ body {
 /* The olive field that sweeps across each spread. */
 :root {
   --olive-field: rgb(111 112 66 / 0.9);
+  /* The colour the star cursor actually resolves to on screen: the accent
+     inverted by mix-blend-difference against the paper. Hard-coded so the
+     marker loop matches the star without needing the blend mode. */
+  --marker: #23b2b7;
 }
 [data-theme="noir"] {
   --olive-field: rgb(154 160 94 / 0.28);
+  --marker: #d44f40;
+}
+
+/* Hand-drawn loop that rings a nav item on hover. */
+.marker {
+  color: var(--marker);
+  overflow: visible;
+}
+.marker path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 520ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.group:hover .marker path,
+.group:focus-visible .marker path {
+  stroke-dashoffset: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marker path {
+    transition: opacity 200ms linear;
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+  .group:hover .marker path,
+  .group:focus-visible .marker path {
+    opacity: 1;
+  }
 }
 
 /* ---------------- Editorial primitives ---------------- */
