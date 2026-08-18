@@ -74,6 +74,52 @@ body {
   --marker: #d44f40;
 }
 
+/* ---------------------------------------------------------------------
+   Layered page transition: as a spread becomes current, its blocks settle
+   in. Headline first, body a beat later, pictures easing up from 96%.
+   The layer sets data-stage; everything below is CSS so it stays cheap.
+--------------------------------------------------------------------- */
+:root {
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-stage > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 620ms var(--ease-editorial),
+    transform 620ms var(--ease-editorial);
+}
+[data-stage="in"] .page-stage > * {
+  opacity: 1;
+  transform: none;
+}
+.page-stage > *:nth-child(2) {
+  transition-delay: 100ms;
+}
+.page-stage > *:nth-child(3) {
+  transition-delay: 170ms;
+}
+.page-stage > *:nth-child(4) {
+  transition-delay: 230ms;
+}
+
+.page-stage figure {
+  transition: transform 760ms var(--ease-editorial);
+}
+[data-stage="out"] .page-stage figure {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-stage > *,
+  .page-stage figure {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Hand-drawn loop that rings a nav item on hover. */
 .marker {
   color: var(--marker);

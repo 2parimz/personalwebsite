@@ -6,7 +6,7 @@ import { site } from "@/content/site";
 /**
  * One spread. Every page is the same paper stock — the variation is in the
  * layout, not the colour. Pages sit stacked in the deck, so this is just a
- * full-bleed frame; the turn itself is handled by <PageDeck>.
+ * full-bleed frame; the stacking is handled by <LayeredPages>.
  */
 export function Page({
   id,
@@ -35,7 +35,9 @@ export function Page({
         </div>
       )}
 
-      <div className="relative z-10 flex h-full flex-col px-8 pb-12 pt-24 sm:px-14 sm:pb-14 sm:pt-28">
+      {/* page-stage: direct children stagger in when this spread becomes
+          current. Driven by data-stage on the layer — see globals.css. */}
+      <div className="page-stage relative z-10 flex h-full flex-col px-8 pb-12 pt-24 sm:px-14 sm:pb-14 sm:pt-28">
         {children}
       </div>
 

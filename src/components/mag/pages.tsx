@@ -71,7 +71,7 @@ export function CoverPage() {
               Based in {site.location}.
             </p>
             <p className="kicker mt-4 text-fg/45">
-              Scroll, or pull the bottom corner
+              Scroll — each spread stacks over the last
             </p>
           </div>
         </div>
@@ -233,7 +233,7 @@ export function SoundPage() {
         </div>
 
         {/* the reel, full width along the foot of the spread */}
-        <div className="col-span-12 min-h-0" data-peel-ignore>
+        <div className="col-span-12 min-h-0" data-layer-ignore>
           <FilmStrip photos={reel.photos} />
         </div>
       </div>
