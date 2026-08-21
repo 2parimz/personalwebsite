@@ -168,6 +168,13 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
           }}
           className="group pointer-events-auto absolute cursor-grab touch-none select-none transition-[filter,transform] duration-300 data-[dragging]:cursor-grabbing data-[dragging]:scale-[1.02]"
         >
+          {/* a scene behind the glass — the frame draws on top of it */}
+          {item.screenLayer === "behind" && item.video && (
+            <div className="absolute inset-0 overflow-hidden">
+              <Screen item={item} />
+            </div>
+          )}
+
           {item.src ? (
             /* width/height are the file's real pixel size, which lets Next
                re-compress and serve a right-sized copy; `h-auto w-full` then
@@ -179,7 +186,7 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
               height={item.natural?.[1] ?? 1200}
               sizes="(max-width: 768px) 60vw, 45vw"
               draggable={false}
-              className="block h-auto w-full [filter:drop-shadow(0_16px_20px_rgba(20,17,15,0.26))] group-data-[dragging]:[filter:drop-shadow(0_30px_34px_rgba(20,17,15,0.34))]"
+              className="relative z-10 block h-auto w-full [filter:drop-shadow(0_16px_20px_rgba(20,17,15,0.26))] group-data-[dragging]:[filter:drop-shadow(0_30px_34px_rgba(20,17,15,0.34))]"
             />
           ) : (
             <div className="flex aspect-[4/3] w-full items-center justify-center rounded-sm border border-dashed border-fg/30 bg-paper/70 shadow-[0_16px_20px_rgba(20,17,15,0.14)]">
@@ -190,7 +197,7 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
           )}
 
           {/* a screen set into the object — the camcorder's LCD */}
-          {item.screen && (
+          {item.screen && item.screenLayer !== "behind" && (
             <div
               data-no-drag
               style={{
@@ -220,13 +227,20 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
 function Screen({ item }: { item: Placed }) {
   const v = item.video;
 
+  const behind = item.screenLayer === "behind";
+
   if (v?.src) {
     return (
       <video
         className="h-full w-full object-cover"
-        controls
+        // Nothing can reach a backdrop's controls — the frame sits on top —
+        // so it plays itself. Muted, which browsers require for autoplay.
+        controls={!behind}
+        autoPlay={behind}
+        loop={behind}
+        muted={behind}
         playsInline
-        preload="none"
+        preload={behind ? "auto" : "none"}
         poster={v.poster ?? undefined}
       >
         <source src={v.src} />
@@ -247,6 +261,9 @@ function Screen({ item }: { item: Placed }) {
       />
     );
   }
+
+  // An empty window is just bright glass, not a dead screen.
+  if (behind) return null;
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center gap-1 bg-[#0d100e] px-2 text-center">

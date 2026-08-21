@@ -38,7 +38,7 @@ export function Nav() {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <nav className="pointer-events-auto flex items-center justify-between gap-6 border-b border-rule bg-bg/80 px-6 py-3 backdrop-blur-md sm:px-12">
+      <nav className="pointer-events-auto flex items-center justify-between gap-6 bg-bg/80 px-6 py-3 backdrop-blur-md sm:px-12">
         <button type="button" onClick={onNameClick} className="kicker text-left leading-tight">
           <span className="block font-display text-base tracking-normal">{site.name}</span>
           <span className="block text-[0.55rem] text-fg/50">

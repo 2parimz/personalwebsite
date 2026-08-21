@@ -54,11 +54,6 @@ export function Page({
         <span className="kicker text-[0.55rem] text-fg/35">{site.issue}</span>
       </div>
 
-      {/* the binding shadow down the left edge */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-[#14110f]/12 to-transparent"
-      />
     </section>
   );
 }

@@ -61,6 +61,14 @@ export type CoverObject = {
    * Percentages of the object itself, not of the page.
    */
   screen?: { x: number; y: number; w: number; h: number };
+  /**
+   * Where the video sits relative to the image.
+   *   "front"  — over an opaque screen, positioned by `screen` (the camcorder)
+   *   "behind" — filling the whole box and seen through the image's
+   *              transparent parts (the window's glass). Plays muted on a
+   *              loop, since the frame sits on top and nothing can be clicked.
+   */
+  screenLayer?: "front" | "behind";
   /** What plays in that screen. */
   video?: { src: string | null; youtubeId: string | null; poster: string | null };
 };
@@ -73,7 +81,22 @@ export type CoverObject = {
  */
 export const cover = {
   objects: [
-    { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 30, y: 52, w: 34, rotate: -1, natural: [350, 384] },
+    /**
+     * The window's glass is transparent, so drop a clip in `video.src` and it
+     * plays behind the frame as the view outside. Muted and looping.
+     */
+    {
+      id: "window",
+      src: "/objects/window.png",
+      label: "Window",
+      x: 52,
+      y: 6,
+      w: 30,
+      natural: [1000, 667],
+      screenLayer: "behind",
+      video: { src: null, youtubeId: null, poster: null },
+    },
+    { id: "rug", src: "/objects/rug.png", label: "Rug", x: 30, y: 46, w: 24, rotate: -1, natural: [638, 859] },
     { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 22, y: 20, w: 9, natural: [782, 1172] },
     { id: "sofa-velvet", src: "/objects/sofa-velvet.png", label: "Velvet sofa", x: 36, y: 36, w: 38, natural: [1200, 516] },
     { id: "coffee-table", src: "/objects/coffee-table.png", label: "Coffee table", x: 40, y: 62, w: 24, natural: [914, 452] },

@@ -42,15 +42,20 @@ function Slug({ index, children }: { index: string; children: string }) {
 export function CoverPage() {
   const words = site.tagline.split(" ");
   return (
-    <Page bleed={<Flatlay objects={cover.objects} />}>
-      <BananaSpot className="bottom-[14%] right-[7%]" size={24} rotate={-12} />
-
+    <Page
+      bleed={
+        <>
+          <Flatlay objects={cover.objects} />
+          <BananaSpot className="bottom-[8%] left-[5%] z-[60]" size={26} rotate={-14} />
+        </>
+      }
+    >
       {/* The masthead runs right across the top as one line. */}
       <div className="shrink-0">
         <p className="kicker text-fg/55">
           {site.issue} — {site.season}
         </p>
-        <h1 className="display mt-2 whitespace-nowrap text-[clamp(2rem,7.6vw,6.6rem)]">
+        <h1 className="display mt-2 whitespace-nowrap text-[clamp(1.7rem,6vw,5.2rem)]">
           {words.map((w, i) => (
             <span
               key={w + i}
@@ -62,7 +67,7 @@ export function CoverPage() {
                 initial={{ y: "150%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 1, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
-                className={`inline-block ${i === 1 ? "italic" : ""}`}
+                className="inline-block"
               >
                 {w}
                 {i < words.length - 1 ? " " : ""}
