@@ -8,7 +8,6 @@ import { Flatlay } from "@/components/mag/Flatlay";
 import { DuotoneFrame } from "@/components/mag/DuotoneFrame";
 import { CollageBoard } from "@/components/mag/CollageBoard";
 import { Frame } from "@/components/Frame";
-import { TrouserPlate } from "@/components/LineArt";
 import { StarButton, StarIcon } from "@/components/Star";
 import { Boombox } from "@/components/Boombox";
 import { DraggableCassette } from "@/components/Cassette";
@@ -46,47 +45,43 @@ export function CoverPage() {
       bleed={
         <>
           <Flatlay objects={cover.objects} />
+
+          {/* The masthead sits above the objects rather than under them, and
+              is click-through, so furniture can still be dragged across it. */}
+          <div className="pointer-events-none absolute inset-x-8 top-20 z-[50] sm:inset-x-14 sm:top-24">
+            <h1 className="display whitespace-nowrap text-[clamp(1.7rem,6vw,5.2rem)]">
+              {words.map((w, i) => (
+                <span
+                  key={w + i}
+                  className={`inline-block overflow-hidden pb-[0.3em] [margin-bottom:-0.3em] ${
+                    i < words.length - 1 ? "mr-[0.22em]" : ""
+                  }`}
+                >
+                  <motion.span
+                    initial={{ y: "150%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ duration: 1, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
+                    className="inline-block"
+                  >
+                    {w}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
+            <div className="mt-4 max-w-md">
+              <Rule />
+              <p className="mt-3 text-sm leading-relaxed">
+                <strong className="font-display not-italic">{site.name.toUpperCase()}</strong> —{" "}
+                {site.role}. Based in {site.location}.
+              </p>
+            </div>
+          </div>
+
           <BananaSpot className="bottom-[8%] left-[5%] z-[60]" size={26} rotate={-14} />
         </>
       }
     >
-      {/* The masthead runs right across the top as one line. */}
-      <div className="shrink-0">
-        <p className="kicker text-fg/55">
-          {site.issue} — {site.season}
-        </p>
-        <h1 className="display mt-2 whitespace-nowrap text-[clamp(1.7rem,6vw,5.2rem)]">
-          {words.map((w, i) => (
-            <span
-              key={w + i}
-              className={`inline-block overflow-hidden pb-[0.3em] [margin-bottom:-0.3em] ${
-                i < words.length - 1 ? "mr-[0.22em]" : ""
-              }`}
-            >
-              <motion.span
-                initial={{ y: "150%" }}
-                animate={{ y: "0%" }}
-                transition={{ duration: 1, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
-                className="inline-block"
-              >
-                {w}
-                {i < words.length - 1 ? " " : ""}
-              </motion.span>
-            </span>
-          ))}
-        </h1>
-        <div className="mt-4 max-w-md">
-          <Rule />
-          <p className="mt-3 text-sm leading-relaxed">
-            <strong className="font-display not-italic">{site.name.toUpperCase()}</strong> —{" "}
-            {site.role}. Based in {site.location}.
-          </p>
-        </div>
-      </div>
-
-      <div className="absolute bottom-16 right-12 hidden w-32 opacity-90 lg:block">
-        <TrouserPlate className="h-auto w-full" />
-      </div>
+      <></>
     </Page>
   );
 }
