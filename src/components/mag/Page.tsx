@@ -19,7 +19,7 @@ export function Page({
   className = "",
 }: {
   id?: string;
-  folio: string;
+  folio?: string;
   children: ReactNode;
   bleed?: ReactNode;
   stripe?: "right" | "bottom" | "none";
@@ -46,7 +46,11 @@ export function Page({
 
       {/* folio line */}
       <div className="pointer-events-none absolute inset-x-8 bottom-4 z-20 flex items-end justify-between sm:inset-x-14">
-        <span className="kicker text-[0.55rem] text-fg/35">{folio}</span>
+        {folio ? (
+          <span className="kicker text-[0.55rem] text-fg/35">{folio}</span>
+        ) : (
+          <span />
+        )}
         <span className="kicker text-[0.55rem] text-fg/35">{site.issue}</span>
       </div>
 

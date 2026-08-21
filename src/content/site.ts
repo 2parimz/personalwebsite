@@ -73,15 +73,15 @@ export type CoverObject = {
  */
 export const cover = {
   objects: [
-    { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 30, y: 54, w: 52, rotate: -1, natural: [915, 600] },
-    { id: "window", src: "/objects/window.png", label: "Window", x: 52, y: 5, w: 21, natural: [860, 630] },
-    { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 34, y: -3, w: 10, natural: [782, 1172] },
-    { id: "coffee-table", src: "/objects/coffee-table.png", label: "Coffee table", x: 44, y: 64, w: 25, natural: [914, 452] },
-    { id: "side-table", src: "/objects/side-table.png", label: "Side table", x: 82, y: 50, w: 13, natural: [1200, 1200] },
-    { id: "plant", src: "/objects/plant.png", label: "Plant", x: 75, y: 13, w: 12, natural: [531, 1000] },
-    { id: "lamp", src: "/objects/lamp.png", label: "Lamp", x: 85, y: 37, w: 6.5, natural: [398, 595] },
-    { id: "tulips", src: "/objects/tulips.png", label: "Tulips", x: 46, y: 46, w: 8, rotate: -3, natural: [644, 707] },
-    { id: "flower", src: "/objects/flower.jpg", label: "Flowers", x: 66, y: 62, w: 7, rotate: 2, natural: [715, 1000] },
+    { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 30, y: 52, w: 34, rotate: -1, natural: [350, 384] },
+    { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 22, y: 20, w: 9, natural: [782, 1172] },
+    { id: "sofa-velvet", src: "/objects/sofa-velvet.png", label: "Velvet sofa", x: 36, y: 36, w: 38, natural: [1200, 516] },
+    { id: "coffee-table", src: "/objects/coffee-table.png", label: "Coffee table", x: 40, y: 62, w: 24, natural: [914, 452] },
+    { id: "side-table", src: "/objects/side-table.png", label: "Side table", x: 79, y: 50, w: 12, natural: [1200, 1200] },
+    { id: "plant", src: "/objects/plant.png", label: "Plant", x: 76, y: 20, w: 11, natural: [531, 1000] },
+    { id: "lamp", src: "/objects/lamp.png", label: "Lamp", x: 82, y: 38, w: 6, natural: [398, 595] },
+    { id: "tulips", src: "/objects/tulips.png", label: "Tulips", x: 66, y: 44, w: 7.5, rotate: -3, natural: [644, 707] },
+    { id: "flower", src: "/objects/flower.png", label: "Flowers", x: 16, y: 44, w: 7, rotate: 2, natural: [715, 1000] },
   ] as CoverObject[],
 };
 

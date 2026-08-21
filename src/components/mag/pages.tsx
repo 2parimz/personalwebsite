@@ -42,40 +42,41 @@ function Slug({ index, children }: { index: string; children: string }) {
 export function CoverPage() {
   const words = site.tagline.split(" ");
   return (
-    <Page folio="Cover" bleed={<Flatlay objects={cover.objects} />}>
+    <Page bleed={<Flatlay objects={cover.objects} />}>
       <BananaSpot className="bottom-[14%] right-[7%]" size={24} rotate={-12} />
 
-      <div className="grid min-h-0 flex-1 grid-cols-12 items-start gap-8">
-        <div className="col-span-12 lg:col-span-6">
-          <p className="kicker text-fg/55">
-            {site.issue} — {site.season}
+      {/* The masthead runs right across the top as one line. */}
+      <div className="shrink-0">
+        <p className="kicker text-fg/55">
+          {site.issue} — {site.season}
+        </p>
+        <h1 className="display mt-2 whitespace-nowrap text-[clamp(2rem,7.6vw,6.6rem)]">
+          {words.map((w, i) => (
+            <span
+              key={w + i}
+              className={`inline-block overflow-hidden pb-[0.3em] [margin-bottom:-0.3em] ${
+                i < words.length - 1 ? "mr-[0.22em]" : ""
+              }`}
+            >
+              <motion.span
+                initial={{ y: "150%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 1, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
+                className={`inline-block ${i === 1 ? "italic" : ""}`}
+              >
+                {w}
+                {i < words.length - 1 ? " " : ""}
+              </motion.span>
+            </span>
+          ))}
+        </h1>
+        <div className="mt-4 max-w-md">
+          <Rule />
+          <p className="mt-3 text-sm leading-relaxed">
+            <strong className="font-display not-italic">{site.name.toUpperCase()}</strong> —{" "}
+            {site.role}. Based in {site.location}.
           </p>
-          <h1 className="display mt-4 text-[clamp(3rem,8.6vw,7.6rem)]">
-            {words.map((w, i) => (
-              <span key={w + i} className="block overflow-hidden pb-[0.3em] [margin-bottom:-0.3em]">
-                <motion.span
-                  initial={{ y: "150%" }}
-                  animate={{ y: "0%" }}
-                  transition={{ duration: 1, delay: 0.1 * i, ease: [0.16, 1, 0.3, 1] }}
-                  className={`block ${i === 1 ? "pl-[0.3em] italic" : ""}`}
-                >
-                  {w}
-                </motion.span>
-              </span>
-            ))}
-          </h1>
-          <div className="mt-7 max-w-md">
-            <Rule />
-            <p className="mt-3 text-sm leading-relaxed">
-              <strong className="font-display not-italic">{site.name.toUpperCase()}</strong> — {site.role}.
-              Based in {site.location}.
-            </p>
-            <p className="kicker mt-4 text-fg/45">
-              Drag anything. Shift-drag a corner to resize.
-            </p>
-          </div>
         </div>
-
       </div>
 
       <div className="absolute bottom-16 right-12 hidden w-32 opacity-90 lg:block">

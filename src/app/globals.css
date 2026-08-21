@@ -7,8 +7,8 @@
    invert the whole issue by flipping one attribute on <html>.
 ------------------------------------------------------------------- */
 :root {
-  --bg: #f2ede3;
-  --paper: #faf7f0;
+  --bg: #faf7f2;
+  --paper: #fffdf9;
   --fg: #14110f;
   --accent: #cf3b2c;
   --olive: #6f7042;
@@ -67,7 +67,7 @@ body {
   /* The colour the star cursor actually resolves to on screen: the accent
      inverted by mix-blend-difference against the paper. Hard-coded so the
      marker loop matches the star without needing the blend mode. */
-  --marker: #23b2b7;
+  --marker: #2bbcc6;
 }
 [data-theme="noir"] {
   --olive-field: rgb(154 160 94 / 0.28);
