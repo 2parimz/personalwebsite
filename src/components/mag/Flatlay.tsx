@@ -168,9 +168,24 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
           }}
           className="group pointer-events-auto absolute cursor-grab touch-none select-none transition-[filter,transform] duration-300 data-[dragging]:cursor-grabbing data-[dragging]:scale-[1.02]"
         >
-          {/* a scene behind the glass — the frame draws on top of it */}
+          {/* a scene behind the glass — the frame draws on top of it.
+              Confined to `screen` when the object has one, because this
+              frame is transparent outside its edges too and the video would
+              otherwise spill out around the moulding. */}
           {item.screenLayer === "behind" && item.video && (
-            <div className="absolute inset-0 overflow-hidden">
+            <div
+              className="absolute overflow-hidden"
+              style={
+                item.screen
+                  ? {
+                      left: `${item.screen.x}%`,
+                      top: `${item.screen.y}%`,
+                      width: `${item.screen.w}%`,
+                      height: `${item.screen.h}%`,
+                    }
+                  : { inset: 0 }
+              }
+            >
               <Screen item={item} />
             </div>
           )}

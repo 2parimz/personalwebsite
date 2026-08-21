@@ -5,7 +5,7 @@ The draggable pieces on the front spread, listed in `cover.objects` in
 
 | File | What it is |
 | --- | --- |
-| `rug.jpg` | Leopard-print rug (cropped free of its white margins) |
+| `rug.png` | Leopard-print rug |
 | `sofa-velvet.png` | Brown velvet modular sofa |
 | `chandelier.png` | Crystal chandelier |
 | `coffee-table.png` | Noguchi-style glass coffee table |
@@ -14,14 +14,10 @@ The draggable pieces on the front spread, listed in `cover.objects` in
 | `lamp.png` | Brass scalloped table lamp |
 | `tulips.png` | Tulips in the blue patterned vase |
 | `flower.png` | Flowers (cut out) |
+| `window.png` | Gilded frame — the opening is transparent, video plays behind it |
 
 `camcorder.png` is here too but is not a cover object — it sits on the
 Sound & reel spread and plays a video in its screen. See `reel.camcorder`.
-
-`window2.png` is here but **not in use**: it has no alpha channel, so the
-checkerboard in its panes is baked in as grey pixels rather than being
-transparent. Re-export it from your background remover as a real
-transparent PNG and it can go straight in.
 
 ## Adding another
 
