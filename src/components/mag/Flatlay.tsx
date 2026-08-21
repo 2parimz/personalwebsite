@@ -59,7 +59,13 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>, item: Placed) => {
     // Stops the browser's own image-drag ghost.
     event.preventDefault();
-    const handle = (event.target as HTMLElement).dataset.handle === "resize";
+    const target = event.target as HTMLElement;
+    // The video and its controls are not a drag surface.
+    if (target.closest("[data-no-drag]")) {
+      bringToFront(item.id);
+      return;
+    }
+    const handle = target.dataset.handle === "resize";
     const node = nodes.current.get(item.id);
     if (!node) return;
 
@@ -183,6 +189,22 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
             </div>
           )}
 
+          {/* a screen set into the object — the camcorder's LCD */}
+          {item.screen && (
+            <div
+              data-no-drag
+              style={{
+                left: `${item.screen.x}%`,
+                top: `${item.screen.y}%`,
+                width: `${item.screen.w}%`,
+                height: `${item.screen.h}%`,
+              }}
+              className="absolute overflow-hidden bg-black"
+            >
+              <Screen item={item} />
+            </div>
+          )}
+
           {/* corner grip — appears on hover, drag it to resize */}
           <span
             data-handle="resize"
@@ -190,6 +212,56 @@ export function Flatlay({ objects }: { objects: CoverObject[] }) {
           />
         </div>
       ))}
+    </div>
+  );
+}
+
+/** What plays inside an object's screen, or a standby panel until you add a clip. */
+function Screen({ item }: { item: Placed }) {
+  const v = item.video;
+
+  if (v?.src) {
+    return (
+      <video
+        className="h-full w-full object-cover"
+        controls
+        playsInline
+        preload="none"
+        poster={v.poster ?? undefined}
+      >
+        <source src={v.src} />
+      </video>
+    );
+  }
+
+  if (v?.youtubeId) {
+    return (
+      <iframe
+        className="h-full w-full"
+        src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
+        title={item.label}
+        style={{ border: 0 }}
+        loading="lazy"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    );
+  }
+
+  return (
+    <div className="relative flex h-full w-full flex-col items-center justify-center gap-1 bg-[#0d100e] px-2 text-center">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-20"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 3px)",
+        }}
+      />
+      <span className="kicker text-[0.45rem] text-[#7de08a]">No tape</span>
+      <span className="text-[0.4rem] leading-tight text-[#7de08a]/60">
+        add a clip to /public/video
+      </span>
     </div>
   );
 }

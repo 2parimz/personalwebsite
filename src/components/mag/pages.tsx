@@ -13,7 +13,6 @@ import { StarButton, StarIcon } from "@/components/Star";
 import { Boombox } from "@/components/Boombox";
 import { DraggableCassette } from "@/components/Cassette";
 import { FilmStrip } from "@/components/FilmStrip";
-import { Camcorder } from "@/components/Camcorder";
 import { BananaSpot } from "@/components/eggs/BananaSpot";
 import { useEggs } from "@/components/eggs/EasterEggs";
 
@@ -180,11 +179,11 @@ export function SoundPage() {
   }
 
   return (
-    <Page id="sound" folio="04">
+    <Page id="sound" folio="04" bleed={<Flatlay objects={[reel.camcorder]} />}>
       <Slug index="02">Sound &amp; reel</Slug>
 
       <div className="mt-4 grid min-h-0 flex-1 grid-cols-12 gap-x-10 gap-y-4 overflow-hidden">
-        <div className="col-span-12 lg:col-span-4">
+        <div className="col-span-12 lg:col-span-5">
           <h2 className="display text-[clamp(1.9rem,3.6vw,3rem)] leading-none">
             On <span className="italic">repeat</span>
           </h2>
@@ -212,7 +211,7 @@ export function SoundPage() {
           <audio ref={audioRef} src={loaded?.track.src ?? undefined} onEnded={() => setPlaying(false)} preload="none" />
         </div>
 
-        <div className="col-span-6 hidden min-h-0 lg:col-span-4 lg:block">
+        <div className="col-span-6 hidden min-h-0 lg:col-span-5 lg:block">
           <Boombox
             loaded={loaded}
             playing={playing}
@@ -224,10 +223,6 @@ export function SoundPage() {
             deckRef={deckRef}
             dropHint={dragging}
           />
-        </div>
-
-        <div className="col-span-12 min-h-0 lg:col-span-4">
-          <Camcorder />
         </div>
 
         {/* the reel, full width along the foot of the spread */}

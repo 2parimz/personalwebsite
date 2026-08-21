@@ -56,6 +56,13 @@ export type CoverObject = {
    * object appears at, which is `w` above.
    */
   natural?: [number, number];
+  /**
+   * A rectangle inside the image that plays a video — the camcorder's LCD.
+   * Percentages of the object itself, not of the page.
+   */
+  screen?: { x: number; y: number; w: number; h: number };
+  /** What plays in that screen. */
+  video?: { src: string | null; youtubeId: string | null; poster: string | null };
 };
 
 /**
@@ -66,16 +73,15 @@ export type CoverObject = {
  */
 export const cover = {
   objects: [
-    { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 8, y: 47, w: 55, rotate: -1, natural: [1100, 733] },
-    { id: "sofa-velvet", src: "/objects/sofa-velvet.png", label: "Velvet sofa", x: 41, y: 34, w: 42, natural: [1200, 516] },
-    { id: "sofa-linen", src: "/objects/sofa-linen.png", label: "Linen loveseat", x: 4, y: 46, w: 26, rotate: 1, natural: [1200, 808] },
-    { id: "coffee-table", src: "/objects/coffee-table.png", label: "Coffee table", x: 33, y: 66, w: 24, natural: [914, 452] },
-    { id: "plant", src: "/objects/plant.png", label: "Plant", x: 80, y: 12, w: 16, natural: [725, 1200] },
-    { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 60, y: -4, w: 12, natural: [782, 1172] },
-    { id: "lamp", src: "/objects/lamp.png", label: "Lamp", x: 29, y: 40, w: 7, natural: [398, 595] },
-    { id: "tulips", src: "/objects/tulips.png", label: "Tulips", x: 70, y: 52, w: 9, rotate: -3, natural: [644, 707] },
-    /* Still to come — this one did not make it into the folder. */
-    { id: "pillow-zebra", src: null, label: "Zebra pillow", x: 20, y: 44, w: 10, rotate: -6 },
+    { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 30, y: 54, w: 52, rotate: -1, natural: [915, 600] },
+    { id: "window", src: "/objects/window.png", label: "Window", x: 52, y: 5, w: 21, natural: [860, 630] },
+    { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 34, y: -3, w: 10, natural: [782, 1172] },
+    { id: "coffee-table", src: "/objects/coffee-table.png", label: "Coffee table", x: 44, y: 64, w: 25, natural: [914, 452] },
+    { id: "side-table", src: "/objects/side-table.png", label: "Side table", x: 82, y: 50, w: 13, natural: [1200, 1200] },
+    { id: "plant", src: "/objects/plant.png", label: "Plant", x: 75, y: 13, w: 12, natural: [531, 1000] },
+    { id: "lamp", src: "/objects/lamp.png", label: "Lamp", x: 85, y: 37, w: 6.5, natural: [398, 595] },
+    { id: "tulips", src: "/objects/tulips.png", label: "Tulips", x: 46, y: 46, w: 8, rotate: -3, natural: [644, 707] },
+    { id: "flower", src: "/objects/flower.jpg", label: "Flowers", x: 66, y: 62, w: 7, rotate: 2, natural: [715, 1000] },
   ] as CoverObject[],
 };
 
@@ -251,17 +257,33 @@ export const reel = {
   ] as Photo[],
 
   /**
-   * The camcorder screen. Two ways to fill it:
-   *   1. Drop an .mp4 in /public/video and set `src: "/video/clip.mp4"`
+   * The camcorder on the sound spread. It behaves like a cover object —
+   * drag it, click to bring it forward, shift-drag or pull the corner to
+   * resize — and your clip plays in its flip-out screen.
+   *
+   * To fill the screen, either:
+   *   1. Drop an .mp4 into /public/video and set `src: "/video/clip.mp4"`
    *   2. Or paste a YouTube video ID (the bit after "watch?v=")
    * Leave both null and it shows a standby screen.
+   *
+   * `screen` is measured off the image itself — the LCD aperture sits at
+   * 12.8% from its left and 31% from its top.
    */
-  video: {
-    src: null as string | null,
-    youtubeId: null as string | null,
-    poster: null as string | null,
-    caption: "Handheld, unedited",
-  },
+  camcorder: {
+    id: "camcorder",
+    src: "/objects/camcorder.png",
+    label: "Camcorder",
+    x: 46,
+    y: 26,
+    w: 40,
+    natural: [1032, 800],
+    screen: { x: 12.8, y: 31, w: 39, h: 38 },
+    video: {
+      src: null as string | null,
+      youtubeId: null as string | null,
+      poster: null as string | null,
+    },
+  } as CoverObject,
 };
 
 /* ------------------------------ Feature spread ---------------------------- */
