@@ -92,9 +92,9 @@ export const cover = {
       x: 50,
       y: 6,
       w: 30,
-      natural: [900, 677],
-      /* Re-measured after rotating the frame to landscape. */
-      screen: { x: 17.6, y: 22.2, w: 64.6, h: 54.8 },
+      natural: [692, 467],
+      /* Re-measured after cropping back to the plain gold moulding. */
+      screen: { x: 7.8, y: 9.6, w: 84, h: 79.4 },
       screenLayer: "behind",
       video: { src: null, youtubeId: null, poster: null },
     },
