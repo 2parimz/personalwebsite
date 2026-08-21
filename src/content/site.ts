@@ -96,7 +96,7 @@ export const cover = {
       /* Re-measured after cropping back to the plain gold moulding. */
       screen: { x: 7.8, y: 9.6, w: 84, h: 79.4 },
       screenLayer: "behind",
-      video: { src: null, youtubeId: null, poster: null },
+      video: { src: "/video/window-scene.mp4", youtubeId: null, poster: null },
     },
     { id: "rug", src: "/objects/rug.jpg", label: "Rug", x: 26, y: 50, w: 40, rotate: -1, natural: [1100, 885] },
     { id: "chandelier", src: "/objects/chandelier.png", label: "Chandelier", x: 22, y: 20, w: 9, natural: [782, 1172] },
